@@ -15,5 +15,5 @@ ts-config/dev.env
 package-lock.json
 yarn.lock
 composer.lock
-bootstrap
+bootstrap/cache
 /public/js
