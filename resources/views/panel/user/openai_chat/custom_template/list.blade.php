@@ -1,5 +1,5 @@
 @extends('panel.layout.app')
-@section('title', __('Chat Templates'))
+@section('title', __('Custom Template'))
 
 @section('content')
     <div class="page-header">
@@ -16,9 +16,9 @@
                         {{ __('Back to dashboard') }}
                     </a>
                     <h2 class="page-title mb-3">
-                        {{ __('Chat Templates') }}
+                        {{ __('Custom Chat Templates') }}
                     </h2>
-                    <p class="mb-2">{{ __('Manage Chat Templates') }}</p>
+                    <p class="mb-2">{{ __('Manage Custom Chat Templates') }}</p>
                 </div>
             </div>
         </div>
@@ -31,13 +31,8 @@
                     <a onclick="return toastr.info('This feature is disabled in Demo version.')"
                         class="btn btn-success">{{ __('Add Template') }}</a>
                 @else
-                    @if (auth()->user()->type === 'admin')
-                        <a href="{{ LaravelLocalization::localizeUrl(route('dashboard.admin.openai.chat.addOrUpdate')) }}"
-                            class="btn btn-success">{{ __('Add Template') }}</a>
-                    @else
-                        <a href="{{ LaravelLocalization::localizeUrl(route('dashboard.user.chat.addOrUpdate')) }}"
-                            class="btn btn-success">{{ __('Add Template') }}</a>
-                    @endif
+                    <a href="{{ LaravelLocalization::localizeUrl(route('dashboard.user.openai.chat.addOrUpdate')) }}"
+                        class="btn btn-success">{{ __('Add Template') }}</a>
                 @endif
             </div>
             <div class="card">
@@ -88,7 +83,7 @@
                                                 </svg>
                                             </a>
                                         @else
-                                            <a href="{{ LaravelLocalization::localizeUrl(route(auth()->user()->type === 'admin' ? 'dashboard.admin.openai.chat.addOrUpdate' : 'dashboard.user.chat.addOrUpdate', $entry->id)) }}"
+                                            <a href="{{ LaravelLocalization::localizeUrl(route('dashboard.user.openai.chat.addOrUpdate', $entry->id)) }}"
                                                 class="btn w-[36px] h-[36px] p-0 border hover:bg-[var(--tblr-primary)] hover:text-white"
                                                 title="{{ __('Edit') }}">
                                                 <svg width="13" height="12" viewBox="0 0 16 15" fill="none"
@@ -99,7 +94,7 @@
                                                         stroke-linejoin="round" />
                                                 </svg>
                                             </a>
-                                            <a href="{{ LaravelLocalization::localizeUrl(route(auth()->user()->type === 'admin' ? 'dashboard.admin.openai.chat.delete' : 'dashboard.user.chat.delete', $entry->id)) }}"
+                                            <a href="{{ LaravelLocalization::localizeUrl(route('dashboard.user.openai.chat.delete', $entry->id)) }}"
                                                 onclick="confirm('{{ __('Are you sure? This is permanent.') }}')"
                                                 class="btn p-0 border w-[36px] h-[36px] hover:bg-red-600 hover:text-white"
                                                 title="{{ __('Delete') }}">
