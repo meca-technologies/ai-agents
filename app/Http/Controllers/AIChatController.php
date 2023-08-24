@@ -130,9 +130,9 @@ class AIChatController extends Controller
         $message->user_id = Auth::id();
         $message->response = 'First Initiation';
         if ($category->role == 'default') {
-            $output =  "Hi! I am $category->name, and I'm here to answer all your questions";
+            $output =  __('Hi! I am') . ' ' . $category->name . __(', and I\'m here to answer all your questions');
         } else {
-            $output =  "Hi! I am $category->human_name, and I'm $category->role. $category->helps_with";
+            $output =  __('Hi! I am') . ' ' . $category->human_name . __(', and I\'m') . ' ' . $category->role . '. ' . $category->helps_with;
         }
         $message->output = $output;
         $message->hash = Str::random(256);

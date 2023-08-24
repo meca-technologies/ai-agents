@@ -34,7 +34,7 @@ class YokassaWebhookEvent
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel(Auth::user()->id ?? 3),
+            new PrivateChannel(1),
         ];
     }
 }

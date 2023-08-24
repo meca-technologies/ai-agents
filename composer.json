@@ -11,6 +11,7 @@
         "enshrined/svg-sanitize": "^0.16.0",
         "google/cloud-text-to-speech": "^1.6",
         "guzzlehttp/guzzle": "^7.6",
+        "iyzico/iyzipay-php": "^2.0",
         "laravel/cashier": "^14.8",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",

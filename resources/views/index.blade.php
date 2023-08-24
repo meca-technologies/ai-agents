@@ -156,7 +156,7 @@
 			<x-section-header
 				mb="7"
 				width="w-3/5"
-				title="{!! $fSectSettings->custom_templates_title !!}"
+				title="{!! __($fSectSettings->custom_templates_title) !!}"
 				subtitle="{!! $fSectSettings->custom_templates_description ?? 'Create your own template or use pre-made templates and examples for various content types and industries to help you get started quickly.' !!}"
 			>
 				<h6 class="inline-block py-1 px-3 mb-6 rounded-md text-[13px] font-medium text-[#083D91] bg-[#083D91] bg-opacity-15">
@@ -345,9 +345,11 @@
 					<div class="lqd-tabs-content">
 						<div id="pricing-monthly">
 							<div class="grid grid-cols-3 gap-2 max-md:grid-cols-1 ">
+
                                 @foreach($plansSubscriptionMonthly as $plan)
+									
 									<x-price-table
-										currency="{{currency()->symbol}}"
+										currency="{{ currency()->symbol }}"
 										featured="{{$plan->is_featured == 1}}"
 										title="{!! $plan->name !!}"
 										price="{{number_format($plan->price, 2)}}"
@@ -367,7 +369,7 @@
 							<div class="grid grid-cols-3 gap-2 max-md:grid-cols-1 ">
                                 @foreach($plansSubscriptionAnnual as $plan)
 									<x-price-table
-										currency="{{currency()->symbol}}"
+										currency="{{ currency()->symbol }}"
 										featured="{{$plan->is_featured == 1}}"
 										title="{!! $plan->name !!}"
 										price="{{number_format($plan->price, 2)}}"
@@ -387,7 +389,7 @@
 							<div class="grid grid-cols-3 gap-2 max-md:grid-cols-1">
                                 @foreach($plansPrepaid as $plan)
                                     <x-price-table
-                                        currency="{{currency()->symbol}}"
+                                        currency="{{ currency()->symbol }}"
                                         featured="{{$plan->is_featured == 1}}"
                                         title="{!! $plan->name !!}"
                                         price="{{$plan->price}}"

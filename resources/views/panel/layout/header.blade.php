@@ -313,14 +313,14 @@
 							<span class="nav-link-icon">
 								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"> <path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"></path> <path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"></path> </svg>
 							</span>
-                                <span class="flex items-center transition-[opacity,transform] nav-link-title grow">
+                            <span class="flex items-center transition-[opacity,transform] nav-link-title grow">
 								{{__('Finance')}}
 							</span>
                             </a>
                             <div class="dropdown-menu {{activeRouteBulkShow(['dashboard.admin.finance.plans.index', 'dashboard.admin.finance.paymentGateways.index'])}}">
-                                <a class="dropdown-item {{activeRoute('dashboard.admin.finance.plans.index')}}" href="{{route('dashboard.admin.finance.plans.index')}}">
-                                    {{__('Membership Plans')}}
-                                </a>
+								<a class="dropdown-item {{activeRoute('dashboard.admin.finance.plans.index')}}" href="{{route('dashboard.admin.finance.plans.index')}}">
+									{{__('Membership Plans')}}
+								</a>
 								<a class="dropdown-item {{activeRoute('dashboard.admin.finance.paymentGateways.index')}}" href="{{route('dashboard.admin.finance.paymentGateways.index')}}">
                                     {{__('Payment Gateways')}}
                                 </a>
@@ -416,7 +416,16 @@
 								</span>
                             </a>
                         </li>
-
+						<li class="nav-item">
+							<a class="nav-link {{activeRoute('dashboard.admin.license.index')}}" href="{{route('dashboard.admin.license.index')}}">
+								<span class="nav-link-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path></svg>
+								</span>
+                                <span class="flex items-center justify-between transition-[opacity,transform] nav-link-title grow">
+									{{__('License')}}
+								</span>
+							</a>
+						</li>
 						<li class="nav-item">
                             <a class="nav-link nav-link--update !pe-2 {{activeRoute('dashboard.admin.update.index')}}" href="{{route('dashboard.admin.update.index')}}" >
 								<span class="nav-link-icon">
@@ -499,7 +508,7 @@
     </div>
 </aside>
 <!-- Navbar -->
-<header class="navbar navbar-expand-md navbar-light flex max-lg:h-[65px]">
+<header class="relative navbar navbar-expand-md navbar-light flex max-lg:h-[65px]">
     <div class="container-xl flex-nowrap !items-stretch">
 		<div class="hidden items-center max-lg:flex max-lg:gap-3">
 			<button class="navbar-toggler collapsed max-lg:!block" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
@@ -518,21 +527,24 @@
 						<span class="max-lg:hidden">{{__('Admin Panel')}}</span>
 					</a>
 					@endif
-					@if(getSubscriptionStatus())
-						<a class="btn max-xl:hidden" href="{{route('dashboard.user.payment.subscription')}}">
-							{{getSubscriptionName()}} - {{getSubscriptionDaysLeft()}} {{__('Days Left')}}
-						</a>
-					@else
-						<a class="btn max-xl:hidden" href="{{route('dashboard.user.payment.subscription')}}">
-							{{__('No Active Subscription')}}
+					@if($settings_two->liquid_license_type == "Extended License")
+						@if(getSubscriptionStatus())
+							<a class="btn max-xl:hidden" href="{{route('dashboard.user.payment.subscription')}}">
+								{{getSubscriptionName()}} - {{getSubscriptionDaysLeft()}} {{__('Days Left')}}
+							</a>
+						@else
+							<a class="btn max-xl:hidden" href="{{route('dashboard.user.payment.subscription')}}">
+								{{__('No Active Subscription')}}
+							</a>
+						@endif
+					
+						<a class="btn btn-primary" href="{{route('dashboard.user.payment.subscription')}}">
+							<svg class="md:me-2 max-lg:w-[20px] max-lg:h-[20px]" width="11" height="15" viewBox="0 0 11 15" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+								<path d="M6.6 0L0 9.375H4.4V15L11 5.625H6.6V0Z" />
+							</svg>
+							<span class="max-lg:hidden">{{__('Upgrade')}}</span>
 						</a>
 					@endif
-					<a class="btn btn-primary" href="{{route('dashboard.user.payment.subscription')}}">
-						<svg class="md:me-2 max-lg:w-[20px] max-lg:h-[20px]" width="11" height="15" viewBox="0 0 11 15" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-							<path d="M6.6 0L0 9.375H4.4V15L11 5.625H6.6V0Z" />
-						</svg>
-						<span class="max-lg:hidden">{{__('Upgrade')}}</span>
-					</a>
 				</div>
                 <div class="flex items-center">
                     <a href="?theme=dark" class="nav-link items-center justify-center px-0 hide-theme-dark hover:!bg-transparent max-lg:w-10 max-lg:h-10 max-lg:p-0 max-lg:border max-lg:border-solid max-lg:border-[--tblr-border-color] max-lg:!rounded-full max-lg:dark:bg-white max-lg:dark:bg-opacity-[0.03]" title="{{__('Enable dark mode')}}">
@@ -642,6 +654,7 @@
 			</form>
 		</div>
     </div>
+
 </header>
 
 <!-- Mobile bottom menu -->
@@ -742,3 +755,15 @@
 		</ul>
 	</div>
 </div>
+
+{{-- <script>
+	leadUpdateBtn = document.querySelector('.lead-update-license-btn');
+	leadUpdateBtn.addEventListener('click', (e) => {
+		e.stopPropagation();
+		leadUpdateBtn.parentElement.classList.remove("hidden");
+	})
+
+	document.addEventListener('click', () => {
+		leadUpdateBtn.parentElement.classList.add('hidden');
+	})
+</script> --}}

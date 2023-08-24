@@ -96,6 +96,9 @@
 
             $.ajax( {
                 type: "post",
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
                 url: "/translations/lang/update-all",
                 data: formData,
                 contentType: false,

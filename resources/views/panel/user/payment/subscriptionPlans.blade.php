@@ -37,7 +37,14 @@
 							<div class="flex items-start mb-2 text-[50px] leading-none text-heading font-bold">
 								{{$plan->price}}
 								<div class="inline-flex flex-col items-start gap-2 mt-2 ms-2 text-[0.3em]">
-									{{$plan->currency}} / {{__($plan->frequency)}}
+
+									{{-- {{$plan->currency}} / {{__($plan->frequency)}} --}}
+									@if(currencyShouldDisplayOnRight(currency()->symbol))
+									 	{{__($plan->frequency)}} / {{ currency()->symbol }}
+									@else
+										{{ currency()->symbol }} / {{__($plan->frequency)}}
+									@endif
+
 									@if($plan->is_featured == 1)
 										<div class="inline-flex rounded-full py-[0.25rem] px-[0.75rem] bg-gradient-to-r from-[#ece7f7] via-[#e7c5e6] to-[#e7ebf9] text-[11px] text-black">
 											{{__('Popular plan')}}
@@ -71,25 +78,25 @@
 									</li>
 								@endforeach
 								<li class="mb-[0.625em]">
-										<span class="inline-flex items-center justify-center w-[19px] h-[19px] mr-1 bg-[rgba(var(--tblr-primary-rgb),0.1)] text-primary rounded-xl align-middle">
-											<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
-										</span>
-										@if((int)$plan->total_words >= 0)
-										<strong>{{number_format($plan->total_words)}}</strong> {{__('Word Tokens')}}
-										@else
-										<strong>{{__('Unlimited')}}</strong> {{__('Word Tokens')}}
-										@endif
-									</li>
-									<li class="mb-[0.625em]">
-										<span class="inline-flex items-center justify-center w-[19px] h-[19px] mr-1 bg-[rgba(var(--tblr-primary-rgb),0.1)] text-primary rounded-xl align-middle">
-											<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
-										</span>
-										@if((int)$plan->total_images >= 0)
-										<strong>{{number_format($plan->total_images)}}</strong> {{__('Image Tokens')}}
-										@else
-										<strong>{{__('Unlimited')}}</strong> {{__('Image Tokens')}}
-										@endif
-									</li>
+									<span class="inline-flex items-center justify-center w-[19px] h-[19px] mr-1 bg-[rgba(var(--tblr-primary-rgb),0.1)] text-primary rounded-xl align-middle">
+										<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+									</span>
+									@if((int)$plan->total_words >= 0)
+									<strong>{{number_format($plan->total_words)}}</strong> {{__('Word Tokens')}}
+									@else
+									<strong>{{__('Unlimited')}}</strong> {{__('Word Tokens')}}
+									@endif
+								</li>
+								<li class="mb-[0.625em]">
+									<span class="inline-flex items-center justify-center w-[19px] h-[19px] mr-1 bg-[rgba(var(--tblr-primary-rgb),0.1)] text-primary rounded-xl align-middle">
+										<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>
+									</span>
+									@if((int)$plan->total_images >= 0)
+									<strong>{{number_format($plan->total_images)}}</strong> {{__('Image Tokens')}}
+									@else
+									<strong>{{__('Unlimited')}}</strong> {{__('Image Tokens')}}
+									@endif
+								</li>
 							</ul>
 							@if($activesubid == $plan->id)
 							<div class="mt-auto -mx-[1rem] mb-[1rem] text-center">
@@ -114,7 +121,7 @@
 									<div class="modal-dialog modal-sm modal-dialog-centered">
 										<div class="modal-content">
 											<div class="modal-header">
-												<h1 class="modal-title" id="gatewayModalLabel_{{ $planid }}">Continue with</h1>
+												<h1 class="modal-title" id="gatewayModalLabel_{{ $planid }}">{{__('Continue with')}}</h1>
 												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 											</div>
 											<div class="modal-body vstack gap-3">
@@ -163,7 +170,14 @@
 								<div class="flex items-start mb-2 text-[50px] leading-none text-heading font-bold">
 									{{$plan->price}}
 									<div class="inline-flex flex-col items-start gap-2 mt-2 ms-2 text-[0.3em]">
-										{{$plan->currency}} / {{__('One time')}}
+										{{-- {{$plan->currency}} / {{__('One time')}} --}}
+
+										@if(currencyShouldDisplayOnRight(currency()->symbol))
+											{{__('One time')}} / {{ currency()->symbol }}
+										@else
+											{{ currency()->symbol }} / {{__('One time')}}
+										@endif
+										
 										@if($plan->is_featured == 1)
 											<div class="inline-flex rounded-full py-[0.25rem] px-[0.75rem] bg-gradient-to-r from-[#ece7f7] via-[#e7c5e6] to-[#e7ebf9] text-[11px] text-black">
 												{{__('Popular pack')}}
@@ -210,7 +224,7 @@
 										<div class="modal-dialog modal-sm modal-dialog-centered">
 											<div class="modal-content">
 												<div class="modal-header">
-													<h1 class="modal-title" id="gatewayPrepaidModalLabel_{{ $planid }}">Continue with</h1>
+													<h1 class="modal-title" id="gatewayPrepaidModalLabel_{{ $planid }}">{{__('Continue with')}}</h1>
 													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 												</div>
 												<div class="modal-body vstack gap-3">

@@ -28,6 +28,7 @@
             <div class="card">
                 <div id="table-default-2" class="card-table table-responsive">
                     <form class="p-4 w-1/2 m-auto" method="POST" action="{{ route('dashboard.admin.advertis.update', $advertis) }}">
+                        @csrf
                         @method('PUT')
                         <div class="flex flex-col gap-4">
                             <div class="w-full gap-2 flex flex-col">

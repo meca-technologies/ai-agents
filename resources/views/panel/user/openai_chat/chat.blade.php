@@ -138,6 +138,9 @@
                 jQuery.ajax({
                     url: '/dashboard/user/openai/chat/low/chat_save',
                     type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    },
                     data: formData,
                     contentType: false,
                     processData: false,

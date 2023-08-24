@@ -18,7 +18,7 @@
 		<div class="page-wrapper overflow-hidden">
 			<!-- Updater -->
             @if($good_for_now)
-							@yield('content')
+			@yield('content')
             @elseif(false && !$good_for_now and Route::currentRouteName()!= 'dashboard.admin.settings.general')
                 @include('vendor.installer.magicai_c4st_Act')
             @else

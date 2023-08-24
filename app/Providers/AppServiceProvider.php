@@ -23,7 +23,7 @@ use Spatie\Health\Facades\Health;
 use Spatie\Health\Checks\Checks\DebugModeCheck;
 use Spatie\Health\Checks\Checks\EnvironmentCheck;
 use Spatie\Health\Checks\Checks\DatabaseCheck;
-use Spatie\Health\Checks\Checks\UsedDiskSpaceCheck;
+// use Spatie\Health\Checks\Checks\UsedDiskSpaceCheck;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -49,9 +49,12 @@ class AppServiceProvider extends ServiceProvider
         }
 
         if ($db_set == 1) {
+
+            Schema::defaultStringLength(191);
+            
             //Force SSL HTTPS on all AJAX Requests
             if ($this->app->environment('production')) {
-                // \URL::forceScheme('https');
+                \URL::forceScheme('https');
             }
 
             app()->useLangPath(base_path('lang'));
@@ -138,10 +141,7 @@ class AppServiceProvider extends ServiceProvider
                 $settings = Setting::first();
                 $settings_two = Schema::hasTable((new SettingTwo())->getTable()) ? SettingTwo::first() : null;
 
-                if (
-                    $settings !== null && isset($settings->stripe_status_for_now)
-                    && $settings->stripe_status_for_now == 'active'
-                ) {
+                if ($settings !== null && ($settings_two->liquid_license_type != null)) {
                     View::share('good_for_now', true);
                 } else {
                     View::share('good_for_now', false);
@@ -174,6 +174,11 @@ class AppServiceProvider extends ServiceProvider
 
                 $wordlist = DB::table('jobs')->where('id', '>', 0)->get();
                 if (count($wordlist) > 0) {
+                    # change each job not default to default
+                    DB::table('jobs')
+                    ->where('queue', '<>', 'default')
+                    ->update(['queue' => 'default']);
+
                     Artisan::call("queue:work --once");
                 }
             }
@@ -183,7 +188,7 @@ class AppServiceProvider extends ServiceProvider
             DebugModeCheck::new(),
             EnvironmentCheck::new(),
             DatabaseCheck::new(),
-            UsedDiskSpaceCheck::new(),
+            // UsedDiskSpaceCheck::new(),
             MemoryLimit::new()
         ]);
     }

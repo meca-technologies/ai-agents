@@ -9,9 +9,13 @@ use Illuminate\Support\Facades\Event;
 
 use App\Events\PaypalWebhookEvent;
 use App\Events\StripeWebhookEvent;
+use App\Events\YokassaWebhookEvent;
+use App\Events\TwoCheckoutWebhookEvent;
 
 use App\Listeners\PaypalWebhookListener;
 use App\Listeners\StripeWebhookListener;
+use App\Listeners\YokassaWebhookListener;
+use App\Listeners\TwoCheckoutWebhookListener;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -30,6 +34,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         StripeWebhookEvent::class => [
             StripeWebhookListener::class,
+        ],
+        YokassaWebhookEvent::class => [
+            YokassaWebhookListener::class,
+        ],
+        TwoCheckoutWebhookEvent::class => [
+            TwoCheckoutWebhookListener::class,
         ]
     ];
 

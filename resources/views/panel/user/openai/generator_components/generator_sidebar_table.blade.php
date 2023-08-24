@@ -147,18 +147,25 @@
 </div>
 @endif
 @if($openai->slug=='ai_image_generator')
-    <script>
-            async function lazyLoadImages(offset) {
-                fetch(`{{ route('dashboard.user.openai.lazyloadimage')}}?offset=${offset}&post_type={{$openai->slug}}`)
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        "use strict";
+        
+        let offset = 0; // Declare offset globally
+        const imageContainer = document.querySelector('.image-results');
+
+        function lazyLoadImages() {
+            
+            fetch(`{{ route('dashboard.user.openai.lazyloadimage')}}?offset=${offset}&post_type={{$openai->slug}}`)
                 .then(response => response.json())
                 .then(data => {
                     const images = data.images;
                     const hasMore = data.hasMore;
-                    const imageContainer = document.querySelector('.image-results');
-                    // Append images to the DOM or perform any other action
+
                     images.forEach(image => {
                         const imageResultTemplate = document.querySelector( '#image_result' ).content.cloneNode( true );
                         imageResultTemplate.querySelector('.image-result img').setAttribute('src', image.output);
+                        imageResultTemplate.querySelector('.image-result img').setAttribute('loading', 'lazy');
                         imageResultTemplate.querySelector('.image-result span').innerHTML = image.response == "SD" ? "SD" : "DE";
                         imageResultTemplate.querySelector('.image-result span').setAttribute('class', image.response == "SD" ? "badge bg-blue text-white" : "badge bg-white text-red") 
                         imageResultTemplate.querySelector('.image-result a.download').setAttribute('href', image.output);
@@ -176,16 +183,32 @@
 
                     // Update the offset for the next lazy loading request
                     offset += images.length;
-                    // Check if there are more images to load
+
+                    // Refresh lightbox, check if there are more images
                     refreshFsLightbox();
 
                     if (hasMore) {
-                        // Call the lazyLoadImages function recursively to load the next set of images
-                        lazyLoadImages(offset);
+                        // Attach a scroll event listener to the window
+                        window.addEventListener('scroll', handleScroll);
                     }
                 });
-                
+        }
+
+        function handleScroll() {
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+
+            if (scrollY + windowHeight >= documentHeight) {
+                // Remove the scroll event listener to avoid multiple triggers
+                window.removeEventListener('scroll', handleScroll);
+                lazyLoadImages();
             }
-            lazyLoadImages(0);
-    </script>
+        }
+
+        // Initial loading of images
+        lazyLoadImages();
+
+    });
+</script>
 @endif

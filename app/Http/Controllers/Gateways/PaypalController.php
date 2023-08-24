@@ -1130,9 +1130,4 @@ class PaypalController extends Controller
 
 
     }
-
-
-
-
-
 }

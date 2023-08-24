@@ -31,6 +31,7 @@ use App\Models\UserOpenai;
 use App\Models\UserOpenaiChat;
 use App\Models\UserOpenaiChatMessage;
 use App\Models\UserOrder;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
@@ -376,16 +377,16 @@ class AdminController extends Controller
     public function paymentPlans(){
 
         $gatewayError = false;
-        $gateway = Gateways::where("mode", "sandbox")->first();
+        // $gateway = Gateways::where("mode", "sandbox")->first();
         // if($gateway != null){
         //     if(env('APP_ENV') != 'development'){
         //         error_log('Gateway is set to use sandbox. Please set mode to development!');
         //         $gatewayError = true;
         //     }
         // }
-
+        $setting =  Setting::first();
         $plans = PaymentPlans::all();
-        return view('panel.admin.finance.plans.index', compact('plans', 'gatewayError'));
+        return view('panel.admin.finance.plans.index', compact('plans', 'gatewayError', 'setting'));
     }
 
     public function paymentPlansSubscriptionNewOrEdit($id = null){
@@ -445,7 +446,6 @@ class AdminController extends Controller
         }
 
         if ($request->type == 'subscription'){
-
             $plan->active = 1;
             $plan->name = $request->name;
             $plan->price = (double)$request->price;
@@ -478,10 +478,10 @@ class AdminController extends Controller
         try{
             $tmp = PaymentController::saveGatewayProducts($plan->id, $request->name, (double)$request->price, $request->frequency, $request->type);
         }catch(\Exception $ex){
+            Log::info($ex->getMessage());
             error_log("AdminController->paymentPlansSave()->PaymentController::saveGatewayProducts()\n".$ex->getMessage());
             return back()->with(['message' => $ex->getMessage(), 'type' => 'error']);
         }
-
     }
 
     // Testimonials
