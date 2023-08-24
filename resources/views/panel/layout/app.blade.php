@@ -19,6 +19,7 @@
 			<!-- Updater -->
             @if($good_for_now)
 			@yield('content')
+            {{-- Disable this if you want to use the updater --}}
             @elseif(false && !$good_for_now and Route::currentRouteName()!= 'dashboard.admin.settings.general')
                 @include('vendor.installer.magicai_c4st_Act')
             @else
