@@ -56,7 +56,6 @@ class AIChatController extends Controller
 
   public function openAIChatUpdateSave(Request $request)
   {
-    $user = auth()->user();
     $template = OpenaiGeneratorChatCategory::where('id', $request->template_id)->firstOrFail();
     $parentId = 0;
     if (optional($template)->id && empty($template->user_id)) {
@@ -103,11 +102,51 @@ class AIChatController extends Controller
     $template->color = $request->color;
     $template->chat_completions = $request->chat_completions;
     $template->prompt_prefix = "As a " . $request->role . ", ";
-    if (auth()->user()->type === 'admin') {
-      $template->type = 'admin';
+    $template->type = 'user';
+    $template->save();
+  }
+
+  public function openAIChatCreate(Request $request)
+  {
+
+    if ($request->template_id != 'undefined') {
+      $template = OpenaiGeneratorChatCategory::where('id', $request->template_id)->firstOrFail();
     } else {
-      $template->type = 'user';
+      $template = new OpenaiGeneratorChatCategory();
     }
+
+    if ($request->hasFile('avatar')) {
+      $path = 'upload/images/chatbot/';
+      $image = $request->file('avatar');
+      $image_name = Str::random(4) . '-' . Str::slug($request->name) . '-avatar.' . $image->getClientOriginalExtension();
+
+      //Resim uzantı kontrolü
+      $imageTypes = ['jpg', 'jpeg', 'png', 'svg', 'webp'];
+      if (!in_array(Str::lower($image->getClientOriginalExtension()), $imageTypes)) {
+        $data = array(
+          'errors' => ['The file extension must be jpg, jpeg, png, webp or svg.'],
+        );
+        return response()->json($data, 419);
+      }
+
+      $image->move($path, $image_name);
+
+      $template->image = $path . $image_name;
+    }
+
+    $template->user_id = auth()->user()->id;
+    $template->name = $request->name;
+    $template->parent_id = "0";
+    $template->slug = Str::slug($request->name) . '-' . Str::random(5);
+    $template->short_name = $request->short_name;
+    $template->description = $request->description;
+    $template->role = $request->role;
+    $template->human_name = $request->human_name;
+    $template->helps_with = $request->helps_with;
+    $template->color = $request->color;
+    $template->chat_completions = $request->chat_completions;
+    $template->prompt_prefix = "As a " . $request->role . ", ";
+    $template->type = 'user';
     $template->save();
   }
 

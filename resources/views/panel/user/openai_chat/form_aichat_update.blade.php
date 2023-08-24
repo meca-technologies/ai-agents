@@ -1,5 +1,5 @@
 @extends('panel.layout.app')
-@section('title', 'Edit AIChat Template')
+@section('title', 'Add Or Edit AIChat Template')
 @section('additional_css')
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
@@ -18,7 +18,7 @@
                         {{ __('Back to dashboard') }}
                     </a>
                     <h2 class="page-title mb-2">
-                        {{ __('Edit AIChat Template') }}
+                        {{ __('Add Or Edit AIChat Template') }}
                     </h2>
                 </div>
             </div>

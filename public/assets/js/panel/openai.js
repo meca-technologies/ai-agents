@@ -297,10 +297,16 @@ function templateAIChatSave(template_id) {
   if (editor_chat_completions) {
     formData.append("chat_completions", editor_chat_completions.getValue());
   }
+  var url;
 
+  if (typeof template_id !== "undefined") {
+    url = "/dashboard/user/openai/chat/ai-chat-save";
+  } else {
+    url = "/dashboard/user/openai/chat/ai-chat-create";
+  }
   $.ajax({
     type: "post",
-    url: "/dashboard/user/openai/chat/ai-chat-save",
+    url: url,
     data: formData,
     contentType: false,
     processData: false,

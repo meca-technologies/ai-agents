@@ -286,63 +286,6 @@ class AdminController extends Controller
     $template->save();
   }
 
-  // public function openAIChatAddOrUpdateSave(Request $request)
-  // {
-  //   $user = auth()->user();
-  //   $template = OpenaiGeneratorChatCategory::where('id', $request->template_id)->firstOrFail();
-  //   $parentId = 0;
-  //   if (optional($template)->id && empty($template->user_id)) {
-  //     $parentId = $template->id;
-  //     $template = OpenaiGeneratorChatCategory::create($request->except(['_token', 'avatar', 'role']));
-  //     $template->parent_id = $parentId;
-  //     $template->prompt_prefix = "As a " . $request->role . ", ";
-  //     $template->type = 'user';
-  //     $template->user_id = auth()->id();
-
-  //     $template->update();
-  //   }
-
-  //   if (!optional($template)->id) {
-  //     $template = new OpenaiGeneratorChatCategory();
-  //   }
-
-  //   if ($request->hasFile('avatar')) {
-  //     $path = 'upload/images/chatbot/';
-  //     $image = $request->file('avatar');
-  //     $image_name = Str::random(4) . '-' . Str::slug($request->name) . '-avatar.' . $image->getClientOriginalExtension();
-
-  //     //Resim uzantı kontrolü
-  //     $imageTypes = ['jpg', 'jpeg', 'png', 'svg', 'webp'];
-  //     if (!in_array(Str::lower($image->getClientOriginalExtension()), $imageTypes)) {
-  //       $data = array(
-  //         'errors' => ['The file extension must be jpg, jpeg, png, webp or svg.'],
-  //       );
-  //       return response()->json($data, 419);
-  //     }
-
-  //     $image->move($path, $image_name);
-
-  //     $template->image = $path . $image_name;
-  //   }
-  //   // $template->user_id = auth()->user()->id;
-  //   $template->name = $request->name;
-  //   $template->slug = Str::slug($request->name) . '-' . Str::random(5);
-  //   $template->short_name = $request->short_name;
-  //   $template->description = $request->description;
-  //   $template->role = $request->role;
-  //   $template->human_name = $request->human_name;
-  //   $template->helps_with = $request->helps_with;
-  //   $template->color = $request->color;
-  //   $template->chat_completions = $request->chat_completions;
-  //   $template->prompt_prefix = "As a " . $request->role . ", ";
-  //   if (auth()->user()->type === 'admin') {
-  //     $template->type = 'admin';
-  //   } else {
-  //     $template->type = 'user';
-  //   }
-  //   $template->save();
-  // }
-
   //OPENAI CUSTOM TEMPLATES
   public function openAICustomList()
   {

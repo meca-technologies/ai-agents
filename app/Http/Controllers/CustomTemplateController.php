@@ -37,7 +37,6 @@ class CustomTemplateController extends Controller
 
     if ($request->template_id != 'undefined') {
       $template = OpenaiGeneratorChatCategory::where('id', $request->template_id)->firstOrFail();
-      dd($template);
     } else {
       $template = new OpenaiGeneratorChatCategory();
     }

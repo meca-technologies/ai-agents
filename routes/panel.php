@@ -73,31 +73,32 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
         });
 
 
-        Route::middleware('hasTokens')->group(function () {
-          Route::prefix('chat')->name('chat.')->group(function () {
-            Route::get('/ai-chat-list', [AIChatController::class, 'openAIChatList'])->name('list');
-            Route::get('/ai-chat-update/{id?}', [AIChatController::class, 'openAIChatUpdate'])->name('aiChatUpdate');
-            Route::post('/ai-chat-save', [AIChatController::class, 'openAIChatUpdateSave']);
+        // Route::middleware('hasTokens')->group(function () {
+        Route::prefix('chat')->name('chat.')->group(function () {
+          Route::get('/ai-chat-list', [AIChatController::class, 'openAIChatList'])->name('list');
+          Route::get('/ai-chat-update/{id?}', [AIChatController::class, 'openAIChatUpdate'])->name('aiChatUpdate');
+          Route::post('/ai-chat-create', [AIChatController::class, 'openAIChatCreate'])->name('aiChatCreate');
+          Route::post('/ai-chat-save', [AIChatController::class, 'openAIChatUpdateSave']);
 
 
-            Route::get('/custom-template', [CustomTemplateController::class, 'customTemplateList'])->name('custom-list');
-            Route::get('/add-or-update/{id?}', [CustomTemplateController::class, 'openAIChatAddOrUpdate'])->name('addOrUpdate');
-            Route::post('/save', [CustomTemplateController::class, 'openAICustomChatAddOrUpdateSave']);
-            Route::get('/delete/{id?}', [CustomTemplateController::class, 'openAICustomChatDelete'])->name('delete');
+          Route::get('/custom-template', [CustomTemplateController::class, 'customTemplateList'])->name('custom-list');
+          Route::get('/add-or-update/{id?}', [CustomTemplateController::class, 'openAIChatAddOrUpdate'])->name('addOrUpdate');
+          Route::post('/save', [CustomTemplateController::class, 'openAICustomChatAddOrUpdateSave']);
+          Route::get('/delete/{id?}', [CustomTemplateController::class, 'openAICustomChatDelete'])->name('delete');
 
-            Route::get('/ai-chat/{slug}', [AIChatController::class, 'openAIChat'])->name('chat');
-            Route::get('/stream', [AIController::class, 'chatStream'])->name('stream');
-            Route::match(['get', 'post'], '/chat-send', [AIChatController::class, 'chatOutput']);
-            Route::post('/open-chat-area-container', [AIChatController::class, 'openChatAreaContainer']);
-            Route::post('/start-new-chat', [AIChatController::class, 'startNewChat']);
-            Route::post('/search', [AIChatController::class, 'search']);
-            Route::post('/delete-chat', [AIChatController::class, 'deleteChat']);
-            Route::post('/rename-chat', [AIChatController::class, 'renameChat']);
+          Route::get('/ai-chat/{slug}', [AIChatController::class, 'openAIChat'])->name('chat');
+          Route::get('/stream', [AIController::class, 'chatStream'])->name('stream');
+          Route::match(['get', 'post'], '/chat-send', [AIChatController::class, 'chatOutput']);
+          Route::post('/open-chat-area-container', [AIChatController::class, 'openChatAreaContainer']);
+          Route::post('/start-new-chat', [AIChatController::class, 'startNewChat']);
+          Route::post('/search', [AIChatController::class, 'search']);
+          Route::post('/delete-chat', [AIChatController::class, 'deleteChat']);
+          Route::post('/rename-chat', [AIChatController::class, 'renameChat']);
 
-            //Low systems
-            Route::post('/low/chat_save', [AIChatController::class, 'lowChatSave']);
-          });
+          //Low systems
+          Route::post('/low/chat_save', [AIChatController::class, 'lowChatSave']);
         });
+        // });
       });
       Route::get('/appointment', [AppointmentController::class, 'index'])->name('appointment');
 

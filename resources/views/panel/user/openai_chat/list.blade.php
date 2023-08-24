@@ -19,6 +19,17 @@
                         {{ __('AI Chat') }}
                     </h2>
                 </div>
+                <div class="col">
+                    <div class="mt-2 float-right">
+                        @if (env('APP_STATUS') == 'Demo')
+                            <a onclick="return toastr.info('This feature is disabled in Demo version.')"
+                                class="btn btn-success">{{ __('Add Template') }}</a>
+                        @else
+                            <a href="{{ LaravelLocalization::localizeUrl(route('dashboard.user.openai.chat.aiChatUpdate')) }}"
+                                class="btn btn-success">{{ __('Add Template') }}</a>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
     </div>
