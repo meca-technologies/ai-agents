@@ -44,14 +44,14 @@ class PaypalWebhookListener implements ShouldQueue
      *
      * @var string|null
      */
-    public $queue = 'paypallisteners';
+    public $queue = 'default'; //'paypallisteners'
  
     /**
      * The time (seconds) before the job should be processed.
      *
      * @var int
      */
-    public $delay = 5; //60
+    public $delay = 0; //60
 
 
 
@@ -121,7 +121,7 @@ class PaypalWebhookListener implements ShouldQueue
                 $transactionList = $provider->listTransactions($filters);
                 $transactions = json_decode($transactionList);
 
-                Log::info(json_encode($transactions));
+                // Log::info(json_encode($transactions));
 
                 if(array_key_exists('error', $transactions) === false){
 

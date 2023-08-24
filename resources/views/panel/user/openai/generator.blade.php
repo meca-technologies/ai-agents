@@ -7,10 +7,10 @@
             <div class="row g-2 items-center">
                 <div class="col">
                     <div class="page-pretitle">
-                        {{$openai->description}}
+                        {{__($openai->description)}}
                     </div>
                     <h2 class="page-title mb-2">
-                        {{$openai->title}}
+                        {{__($openai->title)}}
                     </h2>
                 </div>
             </div>
@@ -66,6 +66,9 @@
 
                 $.ajax( {
                     type: "post",
+                        headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                    },
                     url: "/dashboard/user/openai/generate-speech",
                     data: formData,
                     contentType: false,
@@ -791,6 +794,9 @@
 
                         $.ajax( {
                             type: "post",
+                            headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                            },
                             url: "/dashboard/user/openai/generate-speech",
                             data: formData,
                             contentType: false,
@@ -898,6 +904,9 @@
 
             $.ajax({
                 type: "post",
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
                 url: "/dashboard/user/openai/generate",
                 data: formData,
                 contentType: false,
@@ -929,7 +938,7 @@
 								imageResultTemplate.querySelector('.image-result a.gallery').setAttribute('href', image.output);
 								const currenturl = window.location.href;
 								const server = currenturl.split('/')[0];
-								const delete_url = `${server}/dashboard/user/openai/documents/delete/image/{{$openai->slug}}`;
+								const delete_url = `${server}/dashboard/user/openai/documents/delete/image/${image.slug}`;
 								imageResultTemplate.querySelector('.image-result a.delete').setAttribute('href', delete_url);
 								imageResultTemplate.querySelector('.image-result a.download').setAttribute('href', image.output);
 								imageResultTemplate.querySelector('.image-result p.text-heading').setAttribute('title', image.input);

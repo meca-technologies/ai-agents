@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Setting;
 use App\Http\Controllers\AdvertisController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -7,9 +8,11 @@ use App\Http\Controllers\Dashboard\AdminController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\AIController;
 use App\Http\Controllers\PaymentController;
+// use App\Http\Controllers\Gateways\StripeControllerElements as StripeController;
 use App\Http\Controllers\Gateways\StripeController;
 use App\Http\Controllers\Gateways\PaypalController;
 use App\Http\Controllers\Gateways\YokassaController;
+use App\Http\Controllers\Gateways\PaystackController;
 use App\Http\Controllers\Gateways\TwoCheckoutController;
 use App\Http\Controllers\Dashboard\SupportController;
 use App\Http\Controllers\Dashboard\SettingsController;
@@ -26,6 +29,7 @@ use App\Http\Controllers\EmailTemplatesController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Gateways\WalletmaxpayController;
 use App\Http\Controllers\GoogleTTSController;
+
 
 Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']], function () {
     Route::prefix('dashboard')->middleware('auth')->name('dashboard.')->group(function () {
@@ -113,10 +117,15 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
                 Route::post('/stripe/prepaidPay', [StripeController::class, 'prepaidPay'])->name('stripePrepaidPay');
 
                 Route::post('/twocheckout/prepaidPay', [TwoCheckoutController::class, 'prepaidPay'])->name('twocheckoutPrepaidPay');
+                Route::post('/twocheckout/subscribePay', [TwoCheckoutController::class, 'subscribePay'])->name('twocheckoutSubscribePay');
 
 
                 Route::post('/yokassa/subscribePay', [YokassaController::class, 'subscribePay'])->name('YokassaSubscribePay');
                 Route::post('/yokassa/prepaidPay', [YokassaController::class, 'prepaidPay'])->name('YokassaPrepaidPay');
+
+                Route::post('/paystack/subscribePay', [PaystackController::class, 'subscribePay'])->name('paystackSubscribePay');
+                Route::post('/paystack/prepaidPay', [PaystackController::class, 'prepaidPay'])->name('paystackPrepaidPay');
+                Route::get('/test', [PaystackController::class, 'test'])->name('test');
 
                 Route::post('/paypal/create-paypal-order', [PaypalController::class, 'createPayPalOrder'])->name('createPayPalOrder');
                 Route::post('/paypal/capture-paypal-order', [PaypalController::class, 'capturePayPalOrder'])->name('capturePayPalOrder');
@@ -346,6 +355,23 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => ['lo
                         'lastRanAt' => new Carbon($checkResults?->finishedAt),
                         'checkResults' => $checkResults,
                     ]);
+                })->name('index');
+
+                // cache clear
+                Route::get('/cache-clear', function () {
+                    try {
+                        Artisan::call('optimize:clear');
+                        return response()->json(['success' => true]);
+                    } catch (\Throwable $th) {
+                        return response()->json(['success' => false]);
+                    }
+                })->name('cache.clear');
+            });
+
+            //Update license type
+            Route::prefix('license')->name('license.')->group(function () {
+                Route::get('/', function () {
+                    return view('panel.admin.license.index');
                 })->name('index');
             });
         });

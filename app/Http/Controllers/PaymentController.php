@@ -28,11 +28,13 @@ use Laravel\Cashier\Subscription;
 use Illuminate\Support\Facades\Log;
 
 
+// use App\Http\Controllers\Gateways\StripeControllerElements as StripeController;
 use App\Http\Controllers\Gateways\StripeController;
 use App\Http\Controllers\Gateways\PaypalController;
 use App\Http\Controllers\Gateways\YokassaController;
 use App\Http\Controllers\Gateways\TwoCheckoutController;
 use App\Http\Controllers\Gateways\WalletmaxpayController;   
+use App\Http\Controllers\Gateways\PaystackController;
 
 
 /**
@@ -58,7 +60,6 @@ class PaymentController extends Controller
         return $activesubid == $planId;
     }
 
-
     public function startSubscriptionProcess($planId, $gatewayCode){
         $plan = PaymentPlans::where('id', $planId)->first();
         if($plan != null){
@@ -74,8 +75,14 @@ class PaymentController extends Controller
             if($gatewayCode == 'yokassa'){
                 return YokassaController::subscribe($planId, $plan);
             }
+            if($gatewayCode == 'twocheckout'){
+                return TwoCheckoutController::subscribe($planId, $plan);
+            }
             if($gatewayCode == 'walletmaxpay'){
                 return back()->with(['message' => 'WalletMaxPay available only for Token Packs', 'type' => 'error']);
+            }
+            if($gatewayCode == 'paystack'){
+                return PaystackController::subscribe($planId, $plan);
             }
         }
         abort(404);
@@ -88,23 +95,24 @@ class PaymentController extends Controller
         $activeSub = SubscriptionsModel::where([['stripe_status', '=', 'active'], ['user_id', '=', $userId]])->orWhere([['stripe_status', '=', 'trialing'], ['user_id', '=', $userId]])->first();
         if($activeSub == null){
             $activeSub_yokassa = YokassaSubscriptionsModel::where([['subscription_status', '=', 'active'],['user_id','=', $userId]])->first();
-            if($activeSub_yokassa == null){
-                abort(404, 'Could not find any subscription. Please check your gateways panel.');
-                return back()->with(['message' => 'Could not find any subscription. Please check your gateways panel.', 'type' => 'error']);
-            }
-            $gatewayCode = "yokassa";
+            return YokassaController::subscribeCancel();
         } else {
             $gatewayCode = $activeSub->paid_with;
         }
+
         if($gatewayCode == 'stripe'){
             return StripeController::subscribeCancel();
         }
         if($gatewayCode == 'paypal'){
             return PaypalController::subscribeCancel();
         }
-        if($gatewayCode == 'yokassa'){
-            return YokassaController::subscribeCancel();
+        if($gatewayCode == 'twocheckout'){
+            return TwoCheckoutController::subscribeCancel();
         }
+        if($gatewayCode == 'paystack'){
+            return PaystackController::subscribeCancel();
+        }
+
         return back()->with(['message' => 'Could not cancel subscription. Please try again. If this error occures again, please update and migrate.', 'type' => 'error']);
     }
 
@@ -126,6 +134,9 @@ class PaymentController extends Controller
             }
             if($gatewayCode == 'twocheckout'){
                 return TwoCheckoutController::prepaid($planId, $plan);
+            }
+            if($gatewayCode == 'paystack'){
+                return PaystackController::prepaid($planId, $plan);
             }
         }
         abort(404);
@@ -161,6 +172,13 @@ class PaymentController extends Controller
                         // $tmp = YokassaController::saveProduct($planId, $productName, $price, $freq, $typ);
                         return;
                     }
+                    if($gateway->code == 'twocheckout'){
+                        // $tmp = YokassaController::saveProduct($planId, $productName, $price, $freq, $typ);
+                        $tmp = TwoCheckoutController::saveProduct($planId, $productName, $price, $freq, $typ);
+                    }
+                    if($gateway->code == 'paystack'){
+                        $tmp = PaystackController::saveProduct($planId, $productName, $price, $freq, $typ);
+                    }
                 }
             }
         }else{
@@ -186,7 +204,6 @@ class PaymentController extends Controller
 
 
     public static function getSubscriptionDaysLeft(){
-        Log::info("========");
         $userId=Auth::user()->id;
         // Get current active subscription
         $activeSub = SubscriptionsModel::where([['stripe_status', '=', 'active'], ['user_id', '=', $userId]])->orWhere([['stripe_status', '=', 'trialing'], ['user_id', '=', $userId]])->first();
@@ -198,14 +215,21 @@ class PaymentController extends Controller
             if($paid_with == 'paypal'){
                 return PaypalController::getSubscriptionDaysLeft();
             }
+            if($paid_with == 'twocheckout'){
+                return TwoCheckoutController::getSubscriptionDaysLeft();
+            }
+            if($paid_with == 'paystack'){
+                return PaystackController::getSubscriptionDaysLeft();
+            }
         }else{
             $activeSub = YokassaSubscriptionsModel::where([['subscription_status', '=', 'active'],['user_id','=', $userId]])->first();
-            if($activeSub == null) return null;
+            if($activeSub == null) {
+                return null;
+            }
             else return YokassaController::getSubscriptionDaysLeft();
         }
     }
 
-    
     public static function getSubscriptionRenewDate(){
         $userId=Auth::user()->id;
         // Get current active subscription
@@ -221,6 +245,9 @@ class PaymentController extends Controller
             if($paid_with == 'yokassa'){
                 return YokassaController::getSubscriptionRenewDate();
             }
+            if($paid_with == 'paystack'){
+                return PaystackController::getSubscriptionRenewDate();
+            }      
         }else{
             return null;
         }
@@ -240,25 +267,26 @@ class PaymentController extends Controller
                 case 'paypal':
                     return PaypalController::getSubscriptionStatus();
                     break;
-
-                case 'yokassa':
-                    return YokassaController::getSubscriptionStatus();
+                    
+                case 'twocheckout':
+                    return TwoCheckoutController::getSubscriptionStatus();
+                    break;
+                    
+                case 'paystack':
+                    return PaystackController::getSubscriptionStatus();
                     break;
 
                 default:
                     return false;
                     break;
             }
-        }else{
+        } else {
             $activeSub = YokassaSubscriptionsModel::where([['subscription_status', '=', 'active'],['user_id','=', $userId]])->first();
-            if($activeSub != null) {
-                return true;
-            }else{
-                return false;
-            }
+            if($activeSub != null) return true;
+            else return false;
         }
     }
-
+    
     public static function checkIfTrial(){
         $userId=Auth::user()->id;
         // Get current active subscription
@@ -275,6 +303,10 @@ class PaymentController extends Controller
                 
                 case 'yokassa':
                     return YokassaController::checkIfTrial();
+                    break;
+
+                case 'paystack':
+                    return PaystackController::checkIfTrial();
                     break;
 
                 default:
@@ -299,6 +331,7 @@ class PaymentController extends Controller
         $activeSub = SubscriptionsModel::where([['stripe_status', '=', 'active'], ['user_id', '=', $userId]])->orWhere([['stripe_status', '=', 'trialing'], ['user_id', '=', $userId]])->first();
         if($activeSub != null){
             // Get list of current price id/billingplans from gatewayproducts
+            
             $priceArray = GatewayProducts::all()->pluck('price_id')->toArray();
             if(in_array($activeSub->stripe_price, $priceArray) == true){
                 // Do nothing. This is what we want.
@@ -311,7 +344,7 @@ class PaymentController extends Controller
                     // return back()->with(['message' => $ex->getMessage(), 'type' => 'error']);
                 }
             }
-
+            
             // Check if active subscription exists on gateway (by stripe_id / subscription id)
             $isValid = false;
             switch($activeSub->paid_with){
@@ -323,6 +356,12 @@ class PaymentController extends Controller
                     break;
                 case 'yokassa':
                     $isValid = YokassaController::getSubscriptionStatus();
+                    break;
+                case 'twocheckout':
+                    $isValid = TwoCheckoutController::getSubscriptionStatus();
+                    break;
+                case 'paystack':
+                    $isValid = PaystackController::getSubscriptionStatus();
                     break;
             }
             
@@ -367,6 +406,10 @@ class PaymentController extends Controller
         
                         case 'yokassa':
                             $tmp = YokassaController::cancelSubscribedPlan($planId, $subsId);
+                            break;
+
+                        case 'twocheckout':
+                            $tmp = TwoCheckoutController::cancelSubscribedPlan($planId, $subsId);
                             break;
                     }
                 }

@@ -8,8 +8,8 @@ use App\Http\Controllers\GatewayController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Gateways\StripeController;
 use App\Http\Controllers\Gateways\PaypalController;
-
-
+use App\Http\Controllers\Gateways\YokassaController;
+use App\Http\Controllers\Gateways\TwoCheckoutController;
 
 Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]], function() {
 
@@ -17,6 +17,7 @@ Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => [ 'l
         Route::post('/paypal', [PaypalController::class, 'handleWebhook']);
         Route::post('/stripe', [StripeController::class, 'handleWebhook']);
         Route::post('/yokassa', [YokassaController::class, 'handleWebhook']);
+        Route::match(['get', 'post'], '/twocheckout', [TwoCheckoutController::class, 'handleWebhook']);
 
         Route::get('/simulate', [PaypalController::class, 'simulateWebhookEvent']); // This is specific to Paypal
     });

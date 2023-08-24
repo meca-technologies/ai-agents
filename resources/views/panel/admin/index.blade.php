@@ -29,7 +29,14 @@
 	</div>
 </div>
 <!-- Page body -->
-<div class="page-body pt-6">
+<div class="page-body">
+	{{-- @if($setting->liquid_license_type != "Extended License")
+		<div class="container-xl">
+			<div class="bg-red-100 text-red-600 rounded-xl !p-3 dark:bg-orange-600/20 dark:text-orange-200 top-40 left-0 right-0 mx-auto">
+				You license type is {{$setting->liquid_license_type}}. You should <a href="{{route('dashboard.admin.license.index')}}"><u> Upgrade License</u> </a> to use Membership Plans of Finance feature.
+			</div>
+		</div>
+	@endif --}}
 	<div class="container-xl">
 		@if($gatewayError == true)
 		<div class="row">
@@ -75,7 +82,14 @@
 									{{__('Total sales')}}
 								</p>
 								<h3 class="text-[20px] mb-0 flex items-center">
-									{{ $currencySymbol }}{{ number_format(cache('total_sales')) }}
+									{{-- $currencySymbol --}}
+									
+									@if(currencyShouldDisplayOnRight(currency()->symbol))
+										{{ number_format(cache('total_sales')) }} {{ currency()->symbol }}
+									@else
+										{{ currency()->symbol }} {{ number_format(cache('total_sales')) }}
+									@endif
+									
                                     {!! percentageChange(cache('sales_previous_week'), cache('sales_this_week')) !!}
                                 </h3>
 							</div>
@@ -161,7 +175,11 @@
 						<div class="hidden text-[var(--tblr-green)] bg-[rgba(var(--tblr-green-rgb),0.15)] -scale-100"></div>
 						<div class="hidden text-[var(--tblr-red)] bg-[rgba(var(--tblr-red-rgb),0.15)]"></div>
 						<h3 class="flex items-center">
-							${{ number_format(cache('total_sales')) }}
+							@if(currencyShouldDisplayOnRight(currency()->symbol))
+								{{ number_format(cache('total_sales')) }} {{ currency()->symbol }}
+							@else
+								{{ currency()->symbol }} {{ number_format(cache('total_sales')) }}
+							@endif
 							<span class="inline-flex items-center leading-none !ms-2 text-[var(--tblr-green)] text-[10px] bg-[rgba(var(--tblr-green-rgb),0.15)] px-[5px] py-[3px] rounded-[3px]">
 								<svg class="mr-1" width="7" height="4" viewBox="0 0 7 4" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 									<path d="M0 3.2768C0 3.32591 0.0245541 3.38116 0.061384 3.41799L0.368304 3.72491C0.405134 3.76174 0.46038 3.78629 0.509487 3.78629C0.558594 3.78629 0.61384 3.76174 0.65067 3.72491L3.06306 1.31252L5.47545 3.72491C5.51228 3.76174 5.56752 3.78629 5.61663 3.78629C5.67188 3.78629 5.72098 3.76174 5.75781 3.72491L6.06473 3.41799C6.10156 3.38116 6.12612 3.32591 6.12612 3.2768C6.12612 3.2277 6.10156 3.17245 6.06473 3.13562L3.20424 0.275129C3.16741 0.238299 3.11217 0.213745 3.06306 0.213745C3.01395 0.213745 2.95871 0.238299 2.92188 0.275129L0.061384 3.13562C0.0245541 3.17245 0 3.2277 0 3.2768Z"/>
@@ -204,7 +222,7 @@
 						<tbody>
 							@foreach(json_decode(cache('top_countries')) as $top_countries)
 							<tr>
-								<td>{{$top_countries->country ?? 'Not Specified'}}</td>
+								<td>{{__($top_countries->country ?? 'Not Specified')}}</td>
 								<td>{{$top_countries->total}}</td>
 								<td class="w-50">
 									<div class="progress progress-xs">
@@ -238,16 +256,16 @@
 										@if ($entry->user)
 											<strong>{{$entry->user->fullName()}}</strong>
 										@endif
-										{{$entry->activity_type}}
+										{{__($entry->activity_type)}}
 										@if( isset( $entry->activity_title ))
-										<strong>"{{$entry->activity_title}}"</strong>
+										<strong>"{{__($entry->activity_title)}}"</strong>
 										@endif
 									</div>
 									<div class="text-muted">{{$entry->created_at->diffForHumans()}}</div>
 								</td>
 								<td class="!text-end">
 									@if(isset($entry->url))
-									<a href="{{$entry->url}}" class="btn btn-sm btn-primary">Go</a>
+									<a href="{{$entry->url}}" class="btn btn-sm btn-primary">{{__('Go')}}</a>
 									@endif
 								</td>
 							</tr>
@@ -281,21 +299,21 @@
 							@foreach($latestOrders as $order)
 							<tr>
 								<td>
-									{{$order->payment_type}}
+									{{__($order->payment_type)}}
 								</td>
 								@if($order->status == 'Success')
 								<td>
-									<span class="badge bg-success">{{$order->status}}</span>
+									<span class="badge bg-success">{{__($order->status)}}</span>
 								</td>
 								@else
 								<td>
-									<span class="badge bg-danger">{{$order->status}}</span>
+									<span class="badge bg-danger">{{__($order->status)}}</span>
 								</td>
 								@endif
 								<td class="text-muted">
 									<span class="text-[var(--lqd-heading-color)]">{{$order->user->fullName()}}</span>
 									<br>
-									<span class="opacity-70">{{$order->type}}</span>
+									<span class="opacity-70">{{__($order->type)}}</span>
 								</td>
 								<td class="w-1" colspan="3">
 									<span class="text-primary font-medium">{{@$order->plan->name ?? 'Archived Plan'}}</span>

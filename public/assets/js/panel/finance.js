@@ -65,7 +65,7 @@ function subscriptionSave( plan_id ) {
 	formData.append( 'price', $( "#price" ).val() );
 	formData.append( 'frequency', $( "#frequency" ).val() );
 	formData.append( 'is_featured', $( "#is_featured" ).val() );
-	formData.append( 'stripe_product_id', $( "#stripe_product_id" ).val() );
+	// formData.append( 'stripe_product_id', $( "#stripe_product_id" ).val() );
 	formData.append( 'total_words', $( "#total_words" ).val() );
 	formData.append( 'total_images', $( "#total_images" ).val() );
 	formData.append( 'ai_name', $( "#ai_name" ).val() );

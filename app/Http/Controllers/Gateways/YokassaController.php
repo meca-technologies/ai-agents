@@ -158,7 +158,6 @@ class YokassaController extends Controller
     {
         $user = Auth::user();
         
-        
         $activeSub = SubscriptionsModel::where('id', '=', $activeSub_id)->first();
         $plan_id = $activeSub->plan_id;
         $plan = PaymentPlans::where('id', $plan_id)->first();
@@ -242,8 +241,8 @@ class YokassaController extends Controller
 
             // $user->subscription($activeSub->name)->cancelNow();
 
-            // $user->remaining_words = $recent_words < 0 ? 0 : $recent_words;
-            // $user->remaining_images = $recent_images < 0 ? 0 : $recent_images;
+            $user->remaining_words = $recent_words < 0 ? 0 : $recent_words;
+            $user->remaining_images = $recent_images < 0 ? 0 : $recent_images;
             $user->save();
             $activeSub->payment_method_id = '';
             $activeSub->subscription_status = '';
@@ -441,10 +440,10 @@ class YokassaController extends Controller
                 $activeSub->subscription_status = 'cancelled';
                 $activeSub->ends_at = \Carbon\Carbon::now();
                 $activeSub->save();
-                return false;
+                return back()->with(['message' => 'Your subscription is cancelled succesfully.', 'type' => 'success']);
             }
         }
-        return false;
+        return back()->with(['message' => 'Could not find active subscription. Nothing changed!', 'type' => 'error']);
     }
 
 

@@ -40,7 +40,14 @@
 								</div>
 								<div class="col-12 col-md-4 ms-auto text-center text-heading font-semibold max-md:-order-1 max-md:!text-start max-md:mb-3">
 									<h4 class="mb-0 text-[16px]">{{__('Earnings')}}</h4>
-									<p class="mb-2 text-[58px]">${{$totalEarnings-$totalWithdrawal}}</p>
+									<p class="mb-2 text-[58px]">
+										@if(currencyShouldDisplayOnRight(currency()->symbol))
+											{{$totalEarnings-$totalWithdrawal}} {{ currency()->symbol }}
+										@else
+											{{ currency()->symbol }} {{$totalEarnings-$totalWithdrawal}}
+										@endif
+										
+									</p>
 									<p class="mb-0"><span class="opacity-60">{{__('Comission Rate')}}:</span> {{$setting->affiliate_commission_percentage}}%</p>
 									<p class="mb-0"><span class="opacity-60">{{__('Referral Program')}}:</span> {{__('All Purchases')}}</p>
 								</div>

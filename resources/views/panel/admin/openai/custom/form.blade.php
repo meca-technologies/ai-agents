@@ -87,16 +87,37 @@
 								{{__('You can add more filters, just add a filter and hit enter.')}}
 							</div>
 						</div>
-
+						<style>
+							.select-wrapper {
+								position: relative;
+							}
+						
+							.arrow-down {
+								position: absolute;
+								right: 10px;
+								top: 50%;
+								transform: translateY(-50%);
+								width: 0;
+								height: 0;
+								border-left: 5px solid transparent;
+								border-right: 5px solid transparent;
+								border-top: 5px solid #ccc; /* Change the color as needed */
+							}
+						</style>
 						<div class="mb-20">
 							<label class="form-label">
 								{{__('Package Type')}}
 								<x-info-tooltip text="{{__('Choose package type for which plans accessible.')}}" />
 							</label>
-							<select class="form-control" name="premium" id="premium">
-                                <option value="0" {{$template!=null && $template->premium == 0 ? 'selected' : ''}}>{{__('Regular')}}</option>
-                                <option value="1" {{$template!=null && $template->premium == 1 ? 'selected' : ''}}>{{__('Premium')}}</option>
-							</select>
+							<div class="select-wrapper">
+								<select class="form-control" name="premium" id="premium">
+									<option value="0" {{$template!=null && $template->premium == 0 ? 'selected' : ''}}>{{__('Regular')}}</option>
+									<option value="1" {{$template!=null && $template->premium == 1 ? 'selected' : ''}}>{{__('Premium')}}</option>
+								</select>
+								<div class="arrow-down"></div>
+							</div>
+
+							
 						</div>
 
 						<div class="flex items-center !p-4 !py-3 !gap-3 rounded-xl text-[17px] bg-[rgba(157,107,221,0.1)] font-semibold mb-10">

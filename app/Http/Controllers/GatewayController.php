@@ -7,10 +7,12 @@ use App\Http\Controllers\Gateways\StripeController;
 use App\Http\Controllers\Gateways\PaypalController;
 use App\Http\Controllers\Gateways\YokassaController;
 use App\Http\Controllers\Gateways\TwoCheckoutController;
+use App\Http\Controllers\Gateways\PaystackController;
 use App\Models\Activity;
 use App\Models\Currency;
 use App\Models\CustomSettings;
 use App\Models\Gateways;
+use App\Models\Jobs;
 use App\Models\PaymentPlans;
 use App\Models\Setting;
 use App\Models\HowitWorks;
@@ -25,7 +27,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Laravel\Cashier\Subscription;
 
-
 /**
  * Controls ALL Payment Gateway actions
  */
@@ -38,6 +39,8 @@ class GatewayController extends Controller
             "paypal",
             "yokassa",
             "twocheckout",
+            "iyzico",
+            "paystack",
         );
     }
 
@@ -127,6 +130,31 @@ class GatewayController extends Controller
                 "img" => "/assets/img/payments/2checkout.svg",
                 "whiteLogo" => 0,
                 "mode" => 1,
+                "sandbox_client_id" => 0,
+                "sandbox_client_secret" => 0,
+                "sandbox_app_id" => 0,
+                "live_client_id" => 1,
+                "live_client_secret" => 1,
+                "live_app_id" => 0,
+                "currency" => 1,
+                "currency_locale" => 0,
+                "notify_url" => 0,
+                "base_url" => 0,
+                "sandbox_url" => 0,
+                "locale" => 0,
+                "validate_ssl" => 0,
+                "webhook_secret" => 0,
+                "logger" => 0,
+            ],
+            [
+                "code" => "paystack",
+                "title" => "Paystack",
+                "link" => "https://paystack.com/",
+                "active" => 0,
+                "available" => 1,
+                "img" => "/assets/img/payments/paystack-2.svg",
+                "whiteLogo" => 0,
+                "mode" => 1,
                 "sandbox_client_id" => 1,
                 "sandbox_client_secret" => 1,
                 "sandbox_app_id" => 0,
@@ -143,30 +171,56 @@ class GatewayController extends Controller
                 "webhook_secret" => 0,
                 "logger" => 0,
             ],
-            [   "code" => "walletmaxpay",
-                "title" => "WalletMaxPay",
-                "link" => "https://walletmaxpay.com/",
-                "active" => 0,                      //if user activated this gateway - dynamically filled in main page
-                "available" => 1,                   //if gateway is available to use
-                "img" => "/assets/img/payments/walletmaxpay.png",
-                "whiteLogo" => 0,                   //if gateway logo is white
-                "mode" => 1,                        // Option in settings - Automatically set according to the "Development" mode. "Development" ? sandbox : live (PAYPAL - 1)
-                "sandbox_client_id" => 0,           // Option in settings 0-Hidden 1-Visible
-                "sandbox_client_secret" => 0,       // Option in settings
-                "sandbox_app_id" => 0,              // Option in settings
-                "live_client_id" => 1,              // Option in settings
-                "live_client_secret" => 1,          // Option in settings
-                "live_app_id" => 1,                 // Option in settings
-                "currency" => 1,                    // Option in settings
-                "currency_locale" => 0,             // Option in settings
-                "base_url" => 0,                    // Option in settings
-                "sandbox_url" => 0,                 // Option in settings
-                "locale" => 0,                      // Option in settings
-                "validate_ssl" => 0,                // Option in settings
-                "logger" => 0,                      // Option in settings
-                "notify_url" => 0,                  // Gateway notification url at our side
-                "webhook_secret" => 0,              // Option in settings
-            ]
+            // [   "code" => "walletmaxpay",
+            //     "title" => "WalletMaxPay",
+            //     "link" => "https://walletmaxpay.com/",
+            //     "active" => 0,                      
+            //     "available" => 1,                   
+            //     "img" => "/assets/img/payments/walletmaxpay.png",
+            //     "whiteLogo" => 0,                   //if gateway logo is white
+            //     "mode" => 1,                        // Option in settings - Automatically set according to the "Development" mode. "Development" ? sandbox : live (PAYPAL - 1)
+            //     "sandbox_client_id" => 0,           // Option in settings 0-Hidden 1-Visible
+            //     "sandbox_client_secret" => 0,       // Option in settings
+            //     "sandbox_app_id" => 0,              // Option in settings
+            //     "live_client_id" => 1,              // Option in settings
+            //     "live_client_secret" => 1,          // Option in settings
+            //     "live_app_id" => 1,                 // Option in settings
+            //     "currency" => 1,                    // Option in settings
+            //     "currency_locale" => 0,             // Option in settings
+            //     "base_url" => 0,                    // Option in settings
+            //     "sandbox_url" => 0,                 // Option in settings
+            //     "locale" => 0,                      // Option in settings
+            //     "validate_ssl" => 0,                // Option in settings
+            //     "logger" => 0,                      // Option in settings
+            //     "notify_url" => 0,                  // Gateway notification url at our side
+            //     "webhook_secret" => 0,              // Option in settings
+            // ],
+            [
+                "code" => "iyzico",
+                "title" => "iyzico",
+                "link" => "https://www.iyzico.com/",
+                "active" => 0,
+                "available" => 0,
+                "img" => "/assets/img/payments/iyzico.svg",
+                "whiteLogo" => 0,
+                "mode" => 1,
+                "sandbox_client_id" => 1,
+                "sandbox_client_secret" => 1,
+                "sandbox_app_id" => 0,
+                "live_client_id" => 1,
+                "live_client_secret" => 1,
+                "live_app_id" => 0,
+                "currency" => 1,
+                "currency_locale" => 0,
+                "notify_url" => 0,
+                "base_url" => 1,
+                "sandbox_url" => 1,
+                "locale" => 0,
+                "validate_ssl" => 0,
+                "webhook_secret" => 0,
+                "logger" => 0,
+            ],
+            
         ];
 
         return $gateways;
@@ -215,6 +269,15 @@ class GatewayController extends Controller
      * Index page of Payment Gateways in Admin Panel
      */
     public function paymentGateways(){
+
+        //Fix for the bug with multiple queue workers -> moved to AppServiceProvider
+        // $jobs = Jobs::all();
+        // foreach($jobs as $job){
+        //     if($job->queue != 'default'){
+        //         $job->queue = 'default';
+        //         $job->save();
+        //     }
+        // }
 
         $gateways = self::readManageGatewaysPageData();
 
@@ -304,6 +367,13 @@ class GatewayController extends Controller
             abort(404);
         }
 
+        # return 404 error if the system currency is not the same as the gateway currency
+        if($request->code == "paystack" && $request->currency != currency()->id ){
+            return response()->json(['errors' => [__("Paystack default currency not the same with the system default currency.")]], 422);
+        }
+        
+        DB::beginTransaction();
+
         $settings = Gateways::where("code", $request->code)->first();
         if($settings != null){
 
@@ -327,6 +397,7 @@ class GatewayController extends Controller
             $settings->mode = $request->mode;
             $settings->save();
 
+            
             if($settings->is_active == 1){
                 // Update all product ids' and create new price ids'
                 $code = $request->code;
@@ -344,12 +415,17 @@ class GatewayController extends Controller
                     if($code == 'twocheckout'){
                         $temp = TwoCheckoutController::saveAllProducts();
                     }
+                    if($code == 'paystack'){
+                        $temp = PaystackController::saveAllProducts();
+                    }
+
 
                 }catch(\Exception $ex){
+                    DB::rollBack();
                     error_log("GatewayController::gatewaySettingsSave()\n".$ex->getMessage());
                     return back()->with(['message' => $ex->getMessage(), 'type' => 'error']);
                 }
-                return back()->with(['message' => __('Product ID and Price ID of all membership plans are generated.'), 'type' => 'success']);
+
             }
 
         }else{
@@ -359,7 +435,8 @@ class GatewayController extends Controller
             $settings->currency = "124"; //Default currency for Stripe - USD
             $settings->save();
         }
-
+        DB::commit();
+        return back()->with(['message' => __('Product ID and Price ID of all membership plans are generated.'), 'type' => 'success']);
     }
 
 

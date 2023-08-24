@@ -56,8 +56,14 @@
                         @endif
                         <div class="card-body text-center">
                             <div class="text-uppercase text-muted font-weight-medium">{{$plan->name}}</div>
-                            <div class="display-5 fw-bold my-3">{{currency()->symbol}}{{$plan->price}}</div>
-                            <div class="text-uppercase text-muted font-weight-medium mb-2">{{$plan->frequency}} PAYMENTS</div>
+                            <div class="display-5 fw-bold my-3">
+                                @if(currencyShouldDisplayOnRight(currency()->symbol))
+                                    {{$plan->price}}{{ currency()->symbol }}
+                                @else
+                                    {{currency()->symbol}}{{$plan->price}} 
+                                @endif
+                            </div>
+                            <div class="text-uppercase text-muted font-weight-medium mb-2">{{__($plan->frequency)}} {{__('PAYMENTS')}}</div>
 
                             <ul class="list-unstyled lh-lg">
                                 @if($plan->trial_days != 0)
@@ -115,6 +121,9 @@
             formData.append('plan', '{{$plan->id}}');
             $.ajax( {
                 type: "post",
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
                 url: "/dashboard/user/payment/yokassa/subscribePay",
                 data: formData,
                 contentType: false,

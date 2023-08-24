@@ -44,14 +44,14 @@ class StripeWebhookListener implements ShouldQueue
      *
      * @var string|null
      */
-    public $queue = 'stripelisteners';
+    public $queue = 'default'; //stripelisteners
  
     /**
      * The time (seconds) before the job should be processed.
      *
      * @var int
      */
-    public $delay = 5; //60
+    public $delay = 0; //60
 
 
 
@@ -61,7 +61,7 @@ class StripeWebhookListener implements ShouldQueue
     public function handle(StripeWebhookEvent $event): void
     {
         try{
-            Log::info(json_encode($event->payload));
+            // Log::info(json_encode($event->payload));
 
             $settings = Setting::first();
 

@@ -22,42 +22,50 @@
         </div>
     </div>
     <!-- Page body -->
-    <div class="page-body pt-6">
+    @if($settings_two->liquid_license_type != "Extended License")
         <div class="container-xl">
+            <div class="bg-red-100 text-red-600 rounded-xl !p-3 dark:bg-orange-600/20 dark:text-orange-200 top-40 left-0 right-0 mx-auto text-center">
+                {{__('To access this page, you should upgrade to Extended License.') }}  <a href="{{route('dashboard.admin.license.index')}}"><u> {{__('Upgrade License') }}</u></a>
+            </div>
+        </div>
+    @else
+        <div class="page-body pt-6">
+            <div class="container-xl">
 
-            <div class="row row-cols-auto  flex justify-content-center gap-3" >
+                <div class="row row-cols-auto  flex justify-content-center gap-3" >
 
-                @foreach($gateways as $entry)
-                    
-                    <div class="card w-[150px] h-[250px] pt-0 px-0 rounded-md relative">
-                        <div class="w-[148px] h-[148px] flex justify-content-center rounded-md pt-1 {{ $entry['whiteLogo'] == 1 ? 'bg-[#1a1d23]' : ''}} ">
-                            <img src="{{ url('').$entry['img'] }}" style="max-width:130px; max-height:130px; object-fit: contain; width: 100%;  " alt="{{ $entry['title'] }}" class=""/>
+                    @foreach($gateways as $entry)
+                        
+                        <div class="card w-[150px] h-[250px] pt-0 px-0 rounded-md relative">
+                            <div class="w-[148px] h-[148px] flex justify-content-center rounded-md pt-1 {{ $entry['whiteLogo'] == 1 ? 'bg-[#1a1d23]' : ''}} ">
+                                <img src="{{ url('').$entry['img'] }}" style="max-width:130px; max-height:130px; object-fit: contain; width: 100%;  " alt="{{ $entry['title'] }}" class=""/>
+                            </div>
+                            <div class="flex justify-content-center w-100 mt-2">
+                                <a href="{{ $entry['link'] }}" class="text-decoration-none" target="_blank"><h3>{{ $entry['title'] }}</h3></a>
+                            </div>
+                            <div class="flex justify-content-center w-100 px-4 mt-2">
+                            @if($entry["available"] == 1)
+                                <a href="{{route('dashboard.admin.finance.paymentGateways.settings', $entry['code'])}}" class="btn btn-primary w-100">
+                                    {{__('Settings')}}
+                                </a>
+                            @else
+                                <h6><em class="text-muted">{{ __('Coming soon') }}</em></h6>
+                            @endif
+                            </div>
+                            @if($entry["available"] == 1)
+                            @if($entry["active"] == 1)
+                            <div class="w-2 h-2 text-xs text-bg-success absolute top-2 left-2 rounded-circle"><i class="fa fa-check"></i></div>
+                            @else
+                            <div class="w-2 h-2 text-xs text-bg-danger absolute top-2 left-2 rounded-circle"><i class="fa fa-check"></i></div>
+                            @endif
+                            @endif
                         </div>
-                        <div class="flex justify-content-center w-100 mt-2">
-                            <a href="{{ $entry['link'] }}" class="text-decoration-none" target="_blank"><h3>{{ $entry['title'] }}</h3></a>
-                        </div>
-                        <div class="flex justify-content-center w-100 px-4 mt-2">
-                        @if($entry["available"] == 1)
-                            <a href="{{route('dashboard.admin.finance.paymentGateways.settings', $entry['code'])}}" class="btn btn-primary w-100">
-                                {{__('Settings')}}
-                            </a>
-                        @else
-                            <h6><em class="text-muted">{{ __('Coming soon') }}</em></h6>
-                        @endif
-                        </div>
-                        @if($entry["available"] == 1)
-                        @if($entry["active"] == 1)
-                        <div class="w-2 h-2 text-xs text-bg-success absolute top-2 left-2 rounded-circle"><i class="fa fa-check"></i></div>
-                        @else
-                        <div class="w-2 h-2 text-xs text-bg-danger absolute top-2 left-2 rounded-circle"><i class="fa fa-check"></i></div>
-                        @endif
-                        @endif
-                    </div>
-                    
-                @endforeach
+                        
+                    @endforeach
+
+                </div>
 
             </div>
-
         </div>
-    </div>
+    @endif
 @endsection

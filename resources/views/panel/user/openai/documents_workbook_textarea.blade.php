@@ -68,6 +68,7 @@
 @elseif($workbook->generator->type == 'text')
 <div class="border-solid border-t border-r-0 border-b-0 border-l-0 border-[var(--tblr-border-color)] pt-[30px] mt-[15px] [&_.tox-edit-area__iframe]:!bg-transparent">
 	<form class="workbook-form" onsubmit="editWorkbook('{{$workbook->slug}}'); return false;" method="POST">
+		@csrf
 		<div class="mb-[20px]">
 			<input type="text" class="form-control rounded-md" placeholder="{{__('Untitled Document...')}}"  id="workbook_title"  value="{{$workbook->title}}">
 		</div>
@@ -84,7 +85,8 @@
 @elseif($workbook->generator->type == 'audio')
     <div class="border-solid border-t border-r-0 border-b-0 border-l-0 border-[var(--tblr-border-color)] pt-[30px] mt-[15px] [&_.tox-edit-area__iframe]:!bg-transparent">
         <form class="workbook-form" onsubmit="editWorkbook('{{$workbook->slug}}'); return false;" method="POST">
-            <div class="mb-[20px]">
+            @csrf
+			<div class="mb-[20px]">
                 <input type="text" class="form-control rounded-md" placeholder="{{__('Untitled Document...')}}"  id="workbook_title"  value="{{$workbook->title}}">
             </div>
             <div class="mb-[20px]">

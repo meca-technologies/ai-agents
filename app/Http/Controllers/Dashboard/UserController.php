@@ -30,6 +30,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Cashier\Payment;
 use Stripe\PaymentIntent;
 use Stripe\Plan;
@@ -221,7 +223,7 @@ class UserController extends Controller
         } else {
             $is_active_gateway = 0;
         }
-
+        
         //check if any subscription is active
         $userId = Auth::user()->id;
         // Get current active subscription
@@ -240,9 +242,6 @@ class UserController extends Controller
         $prepaidplans = PaymentPlans::where('type', 'prepaid')->where('active', 1)->get();
         return view('panel.user.payment.subscriptionPlans', compact('plans', 'prepaidplans', 'is_active_gateway', 'activeGateways', 'activesubid'));
     }
-
-
-
 
     //Invoice - Billing
     public function invoiceList()
@@ -276,14 +275,33 @@ class UserController extends Controller
     {
         $workbook = UserOpenai::where('slug', $slug)->first();
         $workbook->delete();
-        return redirect()->route('dashboard.user.openai.documents.all')->with(['message' => 'Document deleted succesfuly', 'type' => 'success']);
+        return redirect()->route('dashboard.user.openai.documents.all')->with(['message' => 'Document deleted successfuly', 'type' => 'success']);
     }
 
     public function documentsImageDelete($slug)
     {
         $workbook = UserOpenai::where('slug', $slug)->first();
+        if ($workbook->storage == UserOpenai::STORAGE_LOCAL) {
+            $file = str_replace('/uploads/', "", $workbook->output);
+            Storage::disk('public')->delete($file);
+        } else if ($workbook->storage == UserOpenai::STORAGE_AWS) {
+            $file = str_replace('/', '', parse_url($workbook->output)['path']);
+            Storage::disk('s3')->delete($file);
+        } else {
+            
+            // Manual deleting depends on response
+            if (str_contains($workbook->output, 'https://')) {
+                // AWS Storage
+                $file = str_replace('/', '', parse_url($workbook->output)['path']);
+                Storage::disk('s3')->delete($file);
+            } else {
+                $file = str_replace('/uploads/', "", $workbook->output);
+                Storage::disk('public')->delete($file);
+            }
+            
+        }
         $workbook->delete();
-        return back()->with(['message' => 'Deleted succesfuly', 'type' => 'success']);
+        return back()->with(['message' => 'Deleted successfuly', 'type' => 'success']);
     }
 
     //Affiliates

@@ -11,9 +11,7 @@ use App\Http\Controllers\MailController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 
-Route::group(['prefix' => LaravelLocalization::setLocale(), 
-// 'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]
-],  function() {
+Route::group(['prefix' => LaravelLocalization::setLocale(), 'middleware' => [ 'localeSessionRedirect', 'localizationRedirect', 'localeViewPath' ]], function() {
 Route::middleware('guest')->group(function () {
     Route::get('register', [AuthenticationController::class, 'registerCreate'])
         ->name('register');

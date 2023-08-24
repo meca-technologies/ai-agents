@@ -814,6 +814,7 @@ class AIController extends Controller
             $entry->hash = Str::random(256);
             $entry->credits = 1;
             $entry->words = 0;
+            $entry->storage = $image_storage == self::STORAGE_S3 ? UserOpenai::STORAGE_AWS : UserOpenai::STORAGE_LOCAL;
             $entry->save();
 
             //push each generated image to an array

@@ -17,8 +17,10 @@ use App\Models\OpenAIGenerator;
 use App\Models\OpenaiGeneratorFilter;
 use App\Models\PaymentPlans;
 use App\Models\Setting;
+use App\Models\SettingTwo;
 use App\Models\FrontendSectionsStatusses;
 use App\Models\Testimonials;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -73,10 +75,21 @@ class IndexController extends Controller
 
     public function activate(Request $request){
         $valid = $request->liquid_license_status;
+        $liquid_license_domain_key = $request->liquid_license_domain_key;
         if ($valid == 'valid'){
-            $settings = Setting::first();
-            $settings->stripe_status_for_now = 'active';
-            $settings->save();
+            $client = new Client();
+
+            try {
+                $response = $client->request('GET', "https://portal.liquid-themes.com/api/license/".$liquid_license_domain_key);
+            } catch (\Exception $e) {
+                return response()->json(["status" => "error", "message" => $e->getMessage()]);
+            }
+            
+            $settings_two = SettingTwo::first();
+            // $setting->stripe_status_for_now = 'active';
+            $settings_two->liquid_license_domain_key = $liquid_license_domain_key;
+            $settings_two->liquid_license_type = json_decode($response->getBody())->licenseType;
+            $settings_two->save();
             return redirect()->route('dashboard.index');
         }else{
             echo 'Activation failed!';

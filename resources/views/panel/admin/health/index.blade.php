@@ -20,7 +20,7 @@
         </div>
     </div>
     <!-- Page body -->
-    <div class="page-body pt-6">
+    <div class="page-body">
         <div class="container-xl">
 			@if(Auth::user()->type == 'admin')
             @php
@@ -56,6 +56,20 @@
                     };
                 }
             @endphp
+
+                <div class="mb-3">
+                    <button class="btn btn-lg" id="cleanCacheBtn">
+                        <svg class="mr-2" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M4 7l16 0"></path>
+                            <path d="M10 11l0 6"></path>
+                            <path d="M14 11l0 6"></path>
+                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                        </svg>
+                        {{__('Clean Up Cache')}}
+                    </button>  
+                </div>
 
                 @if (count($checkResults?->storedCheckResults ?? []))
                     <dl class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -152,6 +166,30 @@
     </div>
 @endsection
 @section('script')
+<script>
+    
+    var cleanCacheBtn = document.getElementById('cleanCacheBtn');
+    cleanCacheBtn.addEventListener('click', function() {
+        var confirmResultCache = confirm(@json(__('Are you sure you want to clear the cache?')));
+        if (confirmResultCache) {
+            // AJAX request to delete the log file
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/dashboard/admin/health/cache-clear', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Log file successfully deleted, reload the page
+                        location.reload();
+                    } else {
+                        // Error occurred while deleting the log file
+                        alert(@json(__('An error occurred while clearing the cache.')));
+                    }
+                }
+            };
+            xhr.send();
+        }
+    });
+</script>
 <script>
     document.querySelector('textarea').addEventListener('click', function() {
         this.select();

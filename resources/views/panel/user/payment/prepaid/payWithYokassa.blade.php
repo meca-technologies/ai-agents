@@ -39,8 +39,14 @@
                     @endif
                     <div class="card-body flex flex-col !p-[45px_50px_50px] text-center">
                         <div class="text-heading flex items-end justify-center mt-0 mb-[15px] w-full text-[60px] leading-none">
-							<small class="inline-flex mb-[0.3em] font-normal text-[0.35em]">{{currency()->symbol}}</small>
-							{{$plan->price}}
+							@if(currencyShouldDisplayOnRight(currency()->symbol))
+                                {{$plan->price}}
+                                <small class="inline-flex mb-[0.3em] font-normal text-[0.35em]">{{currency()->symbol}}</small>
+                            @else
+                                <small class="inline-flex mb-[0.3em] font-normal text-[0.35em]">{{currency()->symbol}}</small>
+                                {{$plan->price}}
+                            @endif
+                            
 							<small class="inline-flex mb-[0.3em] font-normal text-[0.35em]">/ {{__('One time')}}</small>
 						</div>
 						<div class="inline-flex mx-auto p-[0.85em_1.2em] bg-white rounded-full font-medium text-[15px] leading-none text-[#2D3136]">{{$plan->name}}</div>
@@ -106,6 +112,9 @@
             formData.append('plan', '{{$plan->id}}')
 			$.ajax( {
 				type: "post",
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
 				url: "/dashboard/user/payment/yokassa/prepaidPay",
 				data: formData,
 				contentType: false,

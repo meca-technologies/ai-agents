@@ -60,6 +60,7 @@ class magicaiUpdaterController extends Controller
             if( ($status = $this->install($last_version)) === false ){
                 $this->log( trans("magicaiupdater.INSTALLATION_ERROR"), true, 'err' );
                 Artisan::call('up'); // Maintenance mode OFF
+                Artisan::call('optimize:clear'); // Clear cache after update
                 return;
             }
             $this->setCurrentVersion($last_version_info['version']); //update system version
@@ -70,6 +71,7 @@ class magicaiUpdaterController extends Controller
             $settings->script_version = $this->getCurrentVersion();
             $settings->save();
             Artisan::call('up'); // Maintenance mode OFF
+            Artisan::call('optimize:clear'); // Clear cache after update
             $this->log( trans("magicaiupdater.MAINTENANCE_MODE_OFF"), true, 'info' );
 
         }catch (\Exception $e) {

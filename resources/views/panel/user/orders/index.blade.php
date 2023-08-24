@@ -43,7 +43,13 @@
 							<td class="sort-name">{{@$entry->plan->name ?? 'Archived'}}</td>
 							<td class="sort-words">{{@$entry->plan->total_words ?? '-'}}</td>
 							<td class="sort-images">{{@$entry->plan->total_images ?? '-'}}</td>
-							<td class="sort-price">{{currency()->symbol}}{{$entry->price}}</td>
+							<td class="sort-price">
+								@if(currencyShouldDisplayOnRight(currency()->symbol))
+									{{$entry->price}}{{currency()->symbol}}
+								@else
+									{{currency()->symbol}}{{$entry->price}}
+								@endif
+							</td>
 							<td class="sort-type text-capitalize">{{$entry->type}}</td>
 							<td class="sort-date" data-date="{{strtotime($entry->created_at)}}">
 								<p class="m-0">{{date("j.n.Y", strtotime($entry->created_at))}}</p>
