@@ -17,12 +17,12 @@
     "src": "resources/css/app.css"
   },
   "resources/css/frontend.scss": {
-    "file": "assets/frontend-2f902131.css",
+    "file": "assets/frontend-1f124738.css",
     "isEntry": true,
     "src": "resources/css/frontend.scss"
   },
   "resources/js/app.js": {
-    "file": "assets/app-9a25e63b.js",
+    "file": "assets/app-4a08c204.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
