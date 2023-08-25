@@ -1011,17 +1011,17 @@ class AdminController extends Controller
       $image->move($path, $image_name);
 
       $item->image = $path . $image_name;
-        $gatewayError = false;
-        // $gateway = Gateways::where("mode", "sandbox")->first();
-        // if($gateway != null){
-        //     if(env('APP_ENV') != 'development'){
-        //         error_log('Gateway is set to use sandbox. Please set mode to development!');
-        //         $gatewayError = true;
-        //     }
-        // }
-        $setting =  Setting::first();
-        $plans = PaymentPlans::all();
-        return view('panel.admin.finance.plans.index', compact('plans', 'gatewayError', 'setting'));
+      $gatewayError = false;
+      // $gateway = Gateways::where("mode", "sandbox")->first();
+      // if($gateway != null){
+      //     if(env('APP_ENV') != 'development'){
+      //         error_log('Gateway is set to use sandbox. Please set mode to development!');
+      //         $gatewayError = true;
+      //     }
+      // }
+      $setting =  Setting::first();
+      $plans = PaymentPlans::all();
+      return view('panel.admin.finance.plans.index', compact('plans', 'gatewayError', 'setting'));
     }
 
     $item->save();
@@ -1057,52 +1057,52 @@ class AdminController extends Controller
       return view('panel.admin.frontend.future.form', compact('item'));
     }
   }
-  
- public function paymentPlansSave(Request $request){
-        if ($request->plan_id != 'undefined'){
-            $plan = PaymentPlans::where('id', $request->plan_id)->firstOrFail();
-        }else{
-            $plan = new PaymentPlans();
-        }
 
-        if ($request->type == 'subscription'){
-            $plan->active = 1;
-            $plan->name = $request->name;
-            $plan->price = (double)$request->price;
-            $plan->frequency = $request->frequency;
-            $plan->is_featured = (int)$request->is_featured;
-            $plan->stripe_product_id = $request->stripe_product_id;
-            $plan->total_words = (int)$request->total_words;
-            $plan->total_images = (int)$request->total_images;
-            $plan->ai_name = $request->ai_name;
-            // $plan->max_tokens = (int)$request->max_tokens;
-            $plan->can_create_ai_images = (int)$request->can_create_ai_images;
-            $plan->plan_type = $request->plan_type;
-            $plan->features = $request->features;
-            $plan->trial_days = $request->trial_days;
-            $plan->type = $request->type;
-            $plan->save();
+  //  public function paymentPlansSave(Request $request){
+  //         if ($request->plan_id != 'undefined'){
+  //             $plan = PaymentPlans::where('id', $request->plan_id)->firstOrFail();
+  //         }else{
+  //             $plan = new PaymentPlans();
+  //         }
 
-        }else{
-            $plan->active = 1;
-            $plan->name = $request->name;
-            $plan->price = (double)$request->price;
-            $plan->is_featured = (int)$request->is_featured;
-            $plan->total_words = (int)$request->total_words;
-            $plan->total_images = (int)$request->total_images;
-            $plan->features = $request->features;
-            $plan->type = $request->type;
-            $plan->save();
-        }
+  //         if ($request->type == 'subscription'){
+  //             $plan->active = 1;
+  //             $plan->name = $request->name;
+  //             $plan->price = (double)$request->price;
+  //             $plan->frequency = $request->frequency;
+  //             $plan->is_featured = (int)$request->is_featured;
+  //             $plan->stripe_product_id = $request->stripe_product_id;
+  //             $plan->total_words = (int)$request->total_words;
+  //             $plan->total_images = (int)$request->total_images;
+  //             $plan->ai_name = $request->ai_name;
+  //             // $plan->max_tokens = (int)$request->max_tokens;
+  //             $plan->can_create_ai_images = (int)$request->can_create_ai_images;
+  //             $plan->plan_type = $request->plan_type;
+  //             $plan->features = $request->features;
+  //             $plan->trial_days = $request->trial_days;
+  //             $plan->type = $request->type;
+  //             $plan->save();
 
-        try{
-            $tmp = PaymentController::saveGatewayProducts($plan->id, $request->name, (double)$request->price, $request->frequency, $request->type);
-        }catch(\Exception $ex){
-            Log::info($ex->getMessage());
-            error_log("AdminController->paymentPlansSave()->PaymentController::saveGatewayProducts()\n".$ex->getMessage());
-            return back()->with(['message' => $ex->getMessage(), 'type' => 'error']);
-        }
-    }
+  //         }else{
+  //             $plan->active = 1;
+  //             $plan->name = $request->name;
+  //             $plan->price = (double)$request->price;
+  //             $plan->is_featured = (int)$request->is_featured;
+  //             $plan->total_words = (int)$request->total_words;
+  //             $plan->total_images = (int)$request->total_images;
+  //             $plan->features = $request->features;
+  //             $plan->type = $request->type;
+  //             $plan->save();
+  //         }
+
+  //         try{
+  //             $tmp = PaymentController::saveGatewayProducts($plan->id, $request->name, (double)$request->price, $request->frequency, $request->type);
+  //         }catch(\Exception $ex){
+  //             Log::info($ex->getMessage());
+  //             error_log("AdminController->paymentPlansSave()->PaymentController::saveGatewayProducts()\n".$ex->getMessage());
+  //             return back()->with(['message' => $ex->getMessage(), 'type' => 'error']);
+  //         }
+  //     }
   public function frontendFuturecreateOrUpdateSave(Request $request)
   {
     if ($request->item_id != 'undefined') {

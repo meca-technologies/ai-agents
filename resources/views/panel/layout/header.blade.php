@@ -559,7 +559,7 @@
                                 </a>
                                 <a class="dropdown-item {{ activeRoute('dashboard.admin.finance.paymentGateways.index') }}"
                                     href="{{ route('dashboard.admin.finance.paymentGateways.index') }}">
-                                    {{ __('Payment Gateways') 
+                                    {{ __('Payment Gateways') }}
                                 </a>
                             </div>
                         </li>
@@ -732,25 +732,41 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{activeRoute('dashboard.admin.license.index')}}" href="{{route('dashboard.admin.license.index')}}">
-                              <span class="nav-link-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path></svg>
-                              </span>
-                                              <span class="flex items-center justify-between transition-[opacity,transform] nav-link-title grow">
-                                {{__('License')}}
-                              </span>
-                            </a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link nav-link--update !pe-2 {{activeRoute('dashboard.admin.update.index')}}" href="{{route('dashboard.admin.update.index')}}" >
+                            <a class="nav-link {{ activeRoute('dashboard.admin.license.index') }}"
+                                href="{{ route('dashboard.admin.license.index') }}">
                                 <span class="nav-link-icon">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
+                                        <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
+                                    </svg>
                                 </span>
-                                                <span class="flex items-center justify-between transition-[opacity,transform] nav-link-title grow">
-                                  {{__('Update')}}
+                                <span
+                                    class="flex items-center justify-between transition-[opacity,transform] nav-link-title grow">
+                                    {{ __('License') }}
                                 </span>
-                              </a>
-                            </li>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link--update !pe-2 {{ activeRoute('dashboard.admin.update.index') }}"
+                                href="{{ route('dashboard.admin.update.index') }}">
+                                <span class="nav-link-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"></path>
+                                        <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
+                                    </svg>
+                                </span>
+                                <span
+                                    class="flex items-center justify-between transition-[opacity,transform] nav-link-title grow">
+                                    {{ __('Update') }}
+                                </span>
+                            </a>
+                        </li>
                     @endif
                     <li
                         class="nav-item h-[auto] transition-all group-[.navbar-shrinked]/body:opacity-0 group-[.navbar-shrinked]/body:translate-x-3 group-[.navbar-shrinked]/body:h-0 group-[.navbar-shrinked]/body:overflow-hidden">
@@ -853,32 +869,38 @@
         </div>
         <div class="navbar-nav flex-row justify-end max-lg:basis-[65%]">
             <div class="flex gap-[18px] max-lg:gap-2">
-              <div class="flex items-center max-xl:gap-2 max-lg:hidden xl:gap-3">
-                @if(Auth::user()->type == 'admin')
-                <a class="btn" href="{{route('dashboard.admin.index')}}" >
-                  <svg class="hidden max-lg:block" xmlns="http://www.w3.org/2000/svg" height="20" fill="currentColor" viewBox="0 96 960 960" width="20"><path d="M690.882 786q25.883 0 44-19Q753 748 753 722.118q0-25.883-18.118-44-18.117-18.118-44-18.118Q665 660 646 678.118q-19 18.117-19 44Q627 748 646 767q19 19 44.882 19ZM689.5 911q33.5 0 60.5-14t46-40q-26-14-51.962-21-25.961-7-54-7-28.038 0-54.538 7-26.5 7-51.5 21 19 26 45.5 40t60 14Zm3 65Q615 976 560 920.5T505 789q0-78.435 54.99-133.718Q614.98 600 693 600q77 0 132.5 55.282Q881 710.565 881 789q0 76-55.5 131.5t-133 55.5ZM480 976q-138-32-229-156.5T160 534V295l320-120 320 120v270q-25-12-52-18.5t-55-6.5q-102.743 0-175.371 72.921Q445 685.843 445 789q0 48 19.5 94t53.5 80q-9 5-19 7.5t-19 5.5Z"/></svg>
-                  <span class="max-lg:hidden">{{__('Admin Panel')}}</span>
-                </a>
-                @endif
-                @if($settings_two->liquid_license_type == "Extended License")
-                  @if(getSubscriptionStatus())
-                    <a class="btn max-xl:hidden" href="{{route('dashboard.user.payment.subscription')}}">
-                      {{getSubscriptionName()}} - {{getSubscriptionDaysLeft()}} {{__('Days Left')}}
-                    </a>
-                  @else
-                    <a class="btn max-xl:hidden" href="{{route('dashboard.user.payment.subscription')}}">
-                      {{__('No Active Subscription')}}
-                    </a>
-                  @endif
+                <div class="flex items-center max-xl:gap-2 max-lg:hidden xl:gap-3">
+                    @if (Auth::user()->type == 'admin')
+                        <a class="btn" href="{{ route('dashboard.admin.index') }}">
+                            <svg class="hidden max-lg:block" xmlns="http://www.w3.org/2000/svg" height="20"
+                                fill="currentColor" viewBox="0 96 960 960" width="20">
+                                <path
+                                    d="M690.882 786q25.883 0 44-19Q753 748 753 722.118q0-25.883-18.118-44-18.117-18.118-44-18.118Q665 660 646 678.118q-19 18.117-19 44Q627 748 646 767q19 19 44.882 19ZM689.5 911q33.5 0 60.5-14t46-40q-26-14-51.962-21-25.961-7-54-7-28.038 0-54.538 7-26.5 7-51.5 21 19 26 45.5 40t60 14Zm3 65Q615 976 560 920.5T505 789q0-78.435 54.99-133.718Q614.98 600 693 600q77 0 132.5 55.282Q881 710.565 881 789q0 76-55.5 131.5t-133 55.5ZM480 976q-138-32-229-156.5T160 534V295l320-120 320 120v270q-25-12-52-18.5t-55-6.5q-102.743 0-175.371 72.921Q445 685.843 445 789q0 48 19.5 94t53.5 80q-9 5-19 7.5t-19 5.5Z" />
+                            </svg>
+                            <span class="max-lg:hidden">{{ __('Admin Panel') }}</span>
+                        </a>
+                    @endif
+                    @if ($settings_two->liquid_license_type == 'Extended License')
+                        @if (getSubscriptionStatus())
+                            <a class="btn max-xl:hidden" href="{{ route('dashboard.user.payment.subscription') }}">
+                                {{ getSubscriptionName() }} - {{ getSubscriptionDaysLeft() }}
+                                {{ __('Days Left') }}
+                            </a>
+                        @else
+                            <a class="btn max-xl:hidden" href="{{ route('dashboard.user.payment.subscription') }}">
+                                {{ __('No Active Subscription') }}
+                            </a>
+                        @endif
 
-                  <a class="btn btn-primary" href="{{route('dashboard.user.payment.subscription')}}">
-                    <svg class="md:me-2 max-lg:w-[20px] max-lg:h-[20px]" width="11" height="15" viewBox="0 0 11 15" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M6.6 0L0 9.375H4.4V15L11 5.625H6.6V0Z" />
-                    </svg>
-                    <span class="max-lg:hidden">{{__('Upgrade')}}</span>
-                  </a>
-                @endif
-				        </div>
+                        <a class="btn btn-primary" href="{{ route('dashboard.user.payment.subscription') }}">
+                            <svg class="md:me-2 max-lg:w-[20px] max-lg:h-[20px]" width="11" height="15"
+                                viewBox="0 0 11 15" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6.6 0L0 9.375H4.4V15L11 5.625H6.6V0Z" />
+                            </svg>
+                            <span class="max-lg:hidden">{{ __('Upgrade') }}</span>
+                        </a>
+                    @endif
+                </div>
                 <div class="flex items-center">
                     <a href="?theme=dark"
                         class="nav-link items-center justify-center px-0 hide-theme-dark hover:!bg-transparent max-lg:w-10 max-lg:h-10 max-lg:p-0 max-lg:border max-lg:border-solid max-lg:border-[--tblr-border-color] max-lg:!rounded-full max-lg:dark:bg-white max-lg:dark:bg-opacity-[0.03]"
