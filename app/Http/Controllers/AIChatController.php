@@ -326,7 +326,6 @@ class AIChatController extends Controller
       }
 
       return response()->stream(function () use ($prompt, $chat_id,  $message_id, $history, $chat_bot) {
-
         try {
           $stream = OpenAI::chat()->createStreamed([
             'model' => $chat_bot,
@@ -373,15 +372,8 @@ class AIChatController extends Controller
           if (connection_aborted()) {
             break;
           }
-        $message = new UserOpenaiChatMessage();
-        $message->user_openai_chat_id = $chat->id;
-        $message->user_id = Auth::id();
-        $message->response = 'First Initiation';
-        if ($category->role == 'default') {
-            $output =  __('Hi! I am') . ' ' . $category->name . __(', and I\'m here to answer all your questions');
-        } else {
-            $output =  __('Hi! I am') . ' ' . $category->human_name . __(', and I\'m') . ' ' . $category->role . '. ' . $category->helps_with;
         }
+
         $message = UserOpenaiChatMessage::whereId($message_id)->first();
         $chat = UserOpenaiChat::whereId($chat_id)->first();
         $message->response = $responsedText;
@@ -401,6 +393,7 @@ class AIChatController extends Controller
         if ($user->remaining_words < -1) {
           $user->remaining_words = 0;
         }
+
         $user->save();
 
         $chat->total_credits += $total_used_tokens;
@@ -410,6 +403,7 @@ class AIChatController extends Controller
         ob_flush();
         flush();
         usleep(50000);
+
       }, 200, [
         'Cache-Control' => 'no-cache',
         'X-Accel-Buffering' => 'no',
@@ -436,8 +430,6 @@ class AIChatController extends Controller
       } else {
         $prompt = $request->prompt;
       }
-
-
 
       $total_used_tokens = 0;
 
