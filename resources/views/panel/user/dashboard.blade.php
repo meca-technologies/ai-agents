@@ -153,10 +153,10 @@
                                                 <td class="td-truncate">
                                                     <a href="{{ LaravelLocalization::localizeUrl(route('dashboard.user.openai.documents.single', $entry->slug)) }}"
                                                         class="block text-truncate text-heading hover:no-underline">
-                                                        <span class="font-medium">{{ $entry->generator->title }}</span>
+                                                        <span class="font-medium">{{ __($entry->generator->title) }}</span>
                                                         <br>
                                                         <span
-                                                            class="italic text-muted opacity-80 dark:!text-white dark:!opacity-50">{{ $entry->generator->description }}</span>
+                                                            class="italic text-muted opacity-80 dark:!text-white dark:!opacity-50">{{ __($entry->generator->description) }}</span>
                                                     </a>
                                                 </td>
                                                 <td class="text-nowrap">
@@ -225,22 +225,22 @@
                                                     </div>
                                                     <a href="#"
                                                         class="text-heading hover:no-underline">
-                                                        <span class="font-medium">{{ $entry->title }}</span>
+                                                        <span class="font-medium">{{ __($entry->title) }}</span>
                                                         <br>
-                                                        <span class="block italic text-muted opacity-80 text-truncate dark:!text-white dark:!opacity-50">{{ $entry->description }}</span>
+                                                        <span class="block italic text-muted opacity-80 text-truncate dark:!text-white dark:!opacity-50">{{ __($entry->description) }}</span>
                                                     </a>
                                                 @elseif ($entry->active == 1)
                                                     <a href="@if ($entry->type == 'voiceover') {{ LaravelLocalization::localizeUrl(route('dashboard.user.openai.generator', $entry->slug)) }}@else {{ LaravelLocalization::localizeUrl(route('dashboard.user.openai.generator.workbook', $entry->slug)) }} @endif"
                                                         class="text-heading hover:no-underline">
-                                                        <span class="font-medium">{{ $entry->title }}</span>
+                                                        <span class="font-medium">{{ __($entry->title) }}</span>
                                                         <br>
-                                                        <span class="block italic text-muted opacity-80 text-truncate dark:!text-white dark:!opacity-50">{{ $entry->description }}</span>
+                                                        <span class="block italic text-muted opacity-80 text-truncate dark:!text-white dark:!opacity-50">{{ __($entry->description) }}</span>
                                                     </a>
                                                 @else
                                                     <div class="text-heading hover:no-underline">
-                                                        <span class="font-medium">{{ $entry->title }}</span>
+                                                        <span class="font-medium">{{ __($entry->title) }}</span>
                                                         <br>
-                                                        <span class="block italic text-muted opacity-80 text-truncate dark:!text-white dark:!opacity-50">{{ $entry->description }}</span>
+                                                        <span class="block italic text-muted opacity-80 text-truncate dark:!text-white dark:!opacity-50">{{ __($entry->description) }}</span>
                                                     </div>
                                                 @endif
                                             </td>

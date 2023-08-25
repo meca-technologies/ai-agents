@@ -13,6 +13,7 @@ use App\Models\Post;
 use App\Models\UserUpvote;
 use App\Models\User;
 use App\Models\UserCategory;
+use Illuminate\Support\Facades\Log;
 
 
 function activeRoute($route_name){
@@ -85,7 +86,11 @@ function percentageChangeSign($old, $new, int $precision = 2){
 
 function currency(){
     $setting = \App\Models\Setting::first();
-    return \App\Models\Currency::where('id', $setting->default_currency)->first();
+    $curr = \App\Models\Currency::where('id', $setting->default_currency)->first();
+    if(in_array($curr->code, config('currency.needs_code_with_symbol'))){
+        $curr->symbol = $curr->code . " " . $curr->symbol;
+    }
+    return $curr;
 }
 
 function getSubscription(){
@@ -646,4 +651,8 @@ function format_double($number) {
     }
 
     return $integerPart . '.' . $decimalPart[0] . '.' . $secondDecimalPart;
+}
+
+function currencyShouldDisplayOnRight($currencySymbol) {
+    return in_array($currencySymbol, config('currency.currencies_with_right_symbols'));
 }

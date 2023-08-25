@@ -47,6 +47,17 @@ Route::get('/clear-log', function () {
     return response()->json(['success' => true]);
 });
 
+// cache clear
+Route::get('/cache-clear', function () {
+    try {
+        Artisan::call('optimize:clear');
+        return response()->json(['success' => true]);
+    } catch (\Throwable $th) {
+        return response()->json(['success' => false]);
+    }
+})->name('cache.clear');
+
+
 //Updater
 
 Route::get('magicai.updater.check',[magicaiUpdaterController::class, 'check']);

@@ -73,12 +73,31 @@
 				<td class="text-center">
 					1
 				</td>
-				<td class="!text-end">{{$invoice->price}}{{currency()->symbol}}</td>
-				<td class="!text-end">{{$invoice->price}}{{currency()->symbol}}</td>
+				<td class="!text-end">
+					@if(currencyShouldDisplayOnRight(currency()->symbol))
+						{{$invoice->price}}{{currency()->symbol}}
+					@else
+						{{currency()->symbol}}{{$invoice->price}}
+					@endif
+					
+				</td>
+				<td class="!text-end">
+					@if(currencyShouldDisplayOnRight(currency()->symbol))
+						{{$invoice->price}}{{currency()->symbol}}
+					@else
+						{{currency()->symbol}}{{$invoice->price}}
+					@endif
+				</td>
 			</tr>
 			<tr>
 				<td colspan="4" class="strong !text-end">{{__('Subtotal')}}</td>
-				<td class="!text-end">{{$invoice->price}}{{currency()->symbol}}</td>
+				<td class="!text-end">
+					@if(currencyShouldDisplayOnRight(currency()->symbol))
+						{{$invoice->price}}{{currency()->symbol}}
+					@else
+						{{currency()->symbol}}{{$invoice->price}}
+					@endif
+				</td>
 			</tr>
 			<tr>
 				<td colspan="4" class="strong !text-end">{{__('Vat Rate')}}</td>
@@ -87,14 +106,26 @@
 			<tr>
 				<td colspan="4" class="strong !text-end">{{__('Vat Due')}}</td>
 				@if(isset($setting->invoice_vat) and $setting->invoice_vat > 0)
-				<td class="!text-end">{{$invoice->price*$setting->invoice_vat/100}}{{currency()->symbol}}</td>
+				<td class="!text-end">
+					@if(currencyShouldDisplayOnRight(currency()->symbol))
+						{{$invoice->price*$setting->invoice_vat/100}}{{currency()->symbol}}
+					@else
+					 	{{currency()->symbol}}{{$invoice->price*$setting->invoice_vat/100}}
+					@endif
+				</td>
 				@else
 				<td class="!text-end">-</td>
 				@endif
 			</tr>
 			<tr>
 				<td colspan="4" class="font-weight-bold text-uppercase !text-end">{{__('Total Due')}}</td>
-				<td class="font-weight-bold !text-end">{{$invoice->price}}{{currency()->symbol}}</td>
+				<td class="font-weight-bold !text-end">
+					@if(currencyShouldDisplayOnRight(currency()->symbol))
+						{{$invoice->price}}{{currency()->symbol}}
+					@else
+						{{currency()->symbol}}{{$invoice->price}}
+					@endif
+				</td>
 			</tr>
 		</table>
 		<p class="text-muted text-center mt-5">{{__('Thank you very much for doing business with us. We look forward to working with you again!')}}</p>

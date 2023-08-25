@@ -30,6 +30,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Cashier\Payment;
 use Stripe\PaymentIntent;
 use Stripe\Plan;
@@ -209,17 +211,43 @@ class UserController extends Controller
     createActivity($user->id, 'Updated', 'Profile Information', null);
     $user->save();
   }
+    //Purchase
+    public function subscriptionPlans()
+    {
 
-  //Purchase
-  public function subscriptionPlans()
-  {
+        //check if any payment gateway enabled
+        $activeGateways = Gateways::where("is_active", 1)->get();
+        if ($activeGateways->count() > 0) {
+            $is_active_gateway = 1;
+        } else {
+            $is_active_gateway = 0;
+        }
+        
+        //check if any subscription is active
+        $userId = Auth::user()->id;
+        // Get current active subscription
+        $activeSub = SubscriptionsModel::where([['stripe_status', '=', 'active'], ['user_id', '=', $userId]])->orWhere([['stripe_status', '=', 'trialing'], ['user_id', '=', $userId]])->first();
+        $activesubid = 0; //id can't be zero, so this will be easy to check
+        if ($activeSub != null) {
+            $activesubid = $activeSub->plan_id;
+        }
 
-    //check if any payment gateway enabled
-    $activeGateways = Gateways::where("is_active", 1)->get();
-    if ($activeGateways->count() > 0) {
-      $is_active_gateway = 1;
-    } else {
-      $is_active_gateway = 0;
+        $activeSub_yokassa = YokassaSubscriptionsModel::where([['subscription_status', '=', 'active'],['user_id','=', $userId]])->first();
+        if($activeSub_yokassa != null) {
+            $activesubid = $activeSub_yokassa->plan_id;
+        }
+
+        $plans = PaymentPlans::where('type', 'subscription')->where('active', 1)->get();
+        $prepaidplans = PaymentPlans::where('type', 'prepaid')->where('active', 1)->get();
+        return view('panel.user.payment.subscriptionPlans', compact('plans', 'prepaidplans', 'is_active_gateway', 'activeGateways', 'activesubid'));
+    }
+
+    //Invoice - Billing
+    public function invoiceList()
+    {
+        $user = Auth::user();
+        $list = $user->orders;
+        return view('panel.user.orders.index', compact('list'));
     }
 
     //check if any subscription is active
@@ -299,8 +327,14 @@ class UserController extends Controller
     $totalWithdrawal = 0;
     foreach ($list2 as $affWithdrawal) {
       $totalWithdrawal += $affWithdrawal->amount;
+      return view('panel.user.affiliate.index', compact('list', 'list2', 'totalEarnings', 'totalWithdrawal'));
     }
-    return view('panel.user.affiliate.index', compact('list', 'list2', 'totalEarnings', 'totalWithdrawal'));
+  }
+  public function documentsDelete($slug)
+  {
+      $workbook = UserOpenai::where('slug', $slug)->first();
+      $workbook->delete();
+      return redirect()->route('dashboard.user.openai.documents.all')->with(['message' => 'Document deleted successfuly', 'type' => 'success']);
   }
 
   public function affiliatesListSendInvitation(Request $request)
@@ -313,6 +347,31 @@ class UserController extends Controller
 
     return response()->json([], 200);
   }
+    public function documentsImageDelete($slug)
+  {
+      $workbook = UserOpenai::where('slug', $slug)->first();
+      if ($workbook->storage == UserOpenai::STORAGE_LOCAL) {
+          $file = str_replace('/uploads/', "", $workbook->output);
+          Storage::disk('public')->delete($file);
+      } else if ($workbook->storage == UserOpenai::STORAGE_AWS) {
+          $file = str_replace('/', '', parse_url($workbook->output)['path']);
+          Storage::disk('s3')->delete($file);
+      } else {
+
+          // Manual deleting depends on response
+          if (str_contains($workbook->output, 'https://')) {
+              // AWS Storage
+              $file = str_replace('/', '', parse_url($workbook->output)['path']);
+              Storage::disk('s3')->delete($file);
+          } else {
+              $file = str_replace('/uploads/', "", $workbook->output);
+              Storage::disk('public')->delete($file);
+          }
+
+      }
+      $workbook->delete();
+      return back()->with(['message' => 'Deleted successfuly', 'type' => 'success']);
+    }
 
   public function affiliatesListSendRequest(Request $request)
   {

@@ -30,7 +30,8 @@
 			<div class="row">
 				<div class="col-md-5 mx-auto">
 					<form id="settings_form" onsubmit="return settingsSave();" enctype="multipart/form-data" method="post">
-						<h3 class="mb-[25px] text-[20px]">{{ __($options['title']).' '.__('Settings')}}</h3>
+						@csrf
+                        <h3 class="mb-[25px] text-[20px]">{{ __($options['title']).' '.__('Settings')}}</h3>
 
                         <div class="vstack gap-3">
 
@@ -115,7 +116,7 @@
                                     </div>
                                 @endif
                             @endif
-                            
+
                             @if($settings->mode == 'sandbox')@endif
                             @if($options['sandbox_client_id'] == 1)
                                 <div class="vstack gap-1">

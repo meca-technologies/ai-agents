@@ -289,6 +289,9 @@
 
             $.ajax({
                 type: "post",
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
                 url: "/dashboard/user/openai/generate",
                 data: formData,
                 contentType: false,

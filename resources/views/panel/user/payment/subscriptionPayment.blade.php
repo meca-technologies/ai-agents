@@ -54,7 +54,13 @@
 
                                         <div class="pt-2 !text-end">
                                             <button type="submit" id="card-button" data-secret="{{ $intent->client_secret }}" class="btn btn-success">
-                                                {{__('Pay')}} {{currency()->symbol}}{{$plan->price}} {{__('with')}}<img src="/images/payment/stripe.svg" height="29px" alt="Stripe">
+                                                {{__('Pay')}} 
+                                                @if(currencyShouldDisplayOnRight(currency()->symbol))
+                                                    {{$plan->price}}{{currency()->symbol}}
+                                                @else
+                                                    {{currency()->symbol}} {{$plan->price}}
+                                                @endif
+                                                {{__('with')}}<img src="/images/payment/stripe.svg" height="29px" alt="Stripe">
                                             </button>
                                         </div>
                                     </div>
@@ -75,8 +81,14 @@
                         @endif
                         <div class="card-body text-center">
                             <div class="text-uppercase text-muted font-weight-medium">{{$plan->name}}</div>
-                            <div class="display-5 fw-bold my-3">{{currency()->symbol}}{{$plan->price}}</div>
-                            <div class="text-uppercase text-muted font-weight-medium mb-2">{{$plan->frequency}} PAYMENTS</div>
+                            <div class="display-5 fw-bold my-3">
+                                @if(currencyShouldDisplayOnRight(currency()->symbol))
+                                    {{$plan->price}}{{currency()->symbol}}
+                                @else
+                                    {{currency()->symbol}} {{$plan->price}}
+                                @endif
+                            </div>
+                            <div class="text-uppercase text-muted font-weight-medium mb-2">{{__($plan->frequency)}} {{__('PAYMENTS')}}</div>
 
                             <ul class="list-unstyled lh-lg">
                                 <li>

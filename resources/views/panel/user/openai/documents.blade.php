@@ -47,7 +47,7 @@
                                         @endif
 									</span>
                                         </td>
-                                        <td class="sort-category">{{$entry->generator->title}}</td>
+                                        <td class="sort-category">{{__($entry->generator->title)}}</td>
                                         <td class="sort-tokens">{{$entry->credits}}</td>
                                         @if($entry->generator->type == 'text')
                                             <td class="max-sm:min-w-[250px]">

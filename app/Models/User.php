@@ -13,6 +13,8 @@ use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Subscriptions as SubscriptionsModel;
 use App\Models\YokassaSubscriptions as YokassaSubscriptionsModel;
+use App\Models\TwoCheckoutSubscriptions;
+
 
 class User extends Authenticatable
 {
@@ -59,6 +61,11 @@ class User extends Authenticatable
     public function fullName()
     {
         return $this->name . ' ' . $this->surname;
+    }
+
+    public function email()
+    {
+        return $this->email;
     }
 
     public function openai()
@@ -118,7 +125,25 @@ class User extends Authenticatable
                     }
                 }
             } else {
-                return null;
+                $activeSub = SubscriptionsModel::where([['stripe_status', '=', 'active'],['user_id','=', $userId]])->first();
+                if ($activeSub != null) {
+                    $plan = PaymentPlans::where('id', $activeSub->plan_id)->first();
+                    if ($plan == null) {
+                        return null;
+                    }
+                    $difference = $activeSub->updated_at->diffInDays(Carbon::now());
+                    if ($plan->frequency == 'monthly') {
+                        if ($difference < 31) {
+                            return $plan;
+                        }
+                    } elseif ($plan->frequency == 'yearly') {
+                        if ($difference < 365) {
+                            return $plan;
+                        }
+                    }
+                } else {
+                    return null;
+                }
             }
         }
     }

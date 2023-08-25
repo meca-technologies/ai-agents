@@ -850,6 +850,33 @@ class AIController extends Controller
 
   public function audioOutput($file, $post, $user)
   {
+    $entry = new UserOpenai();
+    $entry->title = 'New Image';
+    $entry->slug = Str::random(7) . Str::slug($user->fullName()) . '-workbsook';
+    $entry->user_id = Auth::id();
+    $entry->openai_id = $post->id;
+    $entry->input = $prompt;
+    if($image_generator == "stablediffusion")
+        $entry->response = "SD";
+    else
+        $entry->response = "DE";
+    $entry->output = $image_storage == self::STORAGE_S3 ? $path : '/' . $path;
+    $entry->hash = Str::random(256);
+    $entry->credits = 1;
+    $entry->words = 0;
+    $entry->storage = $image_storage == self::STORAGE_S3 ? UserOpenai::STORAGE_AWS : UserOpenai::STORAGE_LOCAL;
+    $entry->save();
+
+    //push each generated image to an array
+    array_push($entries, $entry);
+
+    if ($user->remaining_images - 1 == -1) {
+        $user->remaining_images = 0;
+        $user->save();
+        $userOpenai = UserOpenai::where('user_id', Auth::id())->where('openai_id', $post->id)->orderBy('created_at', 'desc')->get();
+        $openai = OpenAIGenerator::where('id', $post->id)->first();
+        return response()->json(["status" => "success", "images" => $entries, "image_storage" => $image_storage]);
+    }
 
     $path = 'upload/audio/';
 

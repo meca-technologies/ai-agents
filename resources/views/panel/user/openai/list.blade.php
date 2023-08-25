@@ -37,7 +37,7 @@
 						@if(in_array($filter->name, $filter_check))
 							<li>
 								<button data-filter-trigger="{{$filter->name}}" class="inline-flex leading-none p-[0.3em_0.65em] rounded-full bg-[transparent] border-0 text-inherit hover:no-underline hover:bg-[#f2f2f4] transition-colors [&.active]:bg-[#f2f2f4] dark:text-[--tblr-muted] dark:[&.active]:bg-[--lqd-faded-out] dark:[&.active]:text-[--lqd-heading-color]">
-									{{\Illuminate\Support\Str::ucfirst($filter->name)}}
+									{{__(\Illuminate\Support\Str::ucfirst($filter->name))}}
 								</button>
 							</li>
                     	@endif

@@ -28,6 +28,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
+
         $settings = Setting::first();
         if ((bool)$settings->login_without_confirmation == false) {
             $user = User::where('email', $request->email)->first();
@@ -43,11 +44,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->authenticate();
 
-        $request->session()->regenerate();
-        
-        // return response()->json(['success' => 'Login successful'], 200);
 
-        // dd(auth()->user());
+        $request->session()->regenerate();
 
         return redirect(RouteServiceProvider::HOME);
     }

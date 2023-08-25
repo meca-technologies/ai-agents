@@ -45,7 +45,6 @@ class StripeController extends Controller
      */
     public static function getStripePriceId($planId)
     {
-
         //check if plan exists
         $plan = PaymentPlans::where('id', $planId)->first();
         if ($plan != null) {
@@ -64,7 +63,6 @@ class StripeController extends Controller
      */
     public static function subscribe($planId, $plan)
     {
-
         $gateway = Gateways::where("code", "stripe")->first();
         if ($gateway == null) {
             abort(404);
@@ -432,7 +430,6 @@ class StripeController extends Controller
             if ($productData != null) {
 
                 // Create product in every situation. maybe user updated stripe credentials.
-
                 if ($productData->product_id != null && $productName != null) {
                     //Product has been created before
                     $oldProductId = $productData->product_id;
@@ -611,7 +608,6 @@ class StripeController extends Controller
 
     public static function getSubscriptionDaysLeft()
     {
-
         // $plan = PaymentPlans::find($request->plan);
         $user = Auth::user();
         $settings = Setting::first();
@@ -773,7 +769,6 @@ class StripeController extends Controller
     {
 
         try {
-
             $history = OldGatewayProducts::where([
                 "gateway_code" => 'stripe',
                 "status" => 'check'

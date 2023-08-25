@@ -34,7 +34,7 @@ class StripeWebhookEvent
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel(Auth::user()->id ?? 2),
+            new PrivateChannel(1),
         ];
         // return [
         //     new PrivateChannel('channel-name'),

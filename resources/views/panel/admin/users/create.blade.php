@@ -57,6 +57,7 @@
                     @endif
                     <hr>
                     <form action="{{ route('dashboard.user.store') }}" method="POST" class="m-3 w-2/3" enctype="multipart/form-data">
+                        @csrf
                         <div class="flex gap-4">
                             <div class="w-1/2 gap-2 flex flex-col">
                                 <label for="name" class="m-1">First Name</label>

@@ -117,7 +117,7 @@
                             <form novalidate="novalidate" onsubmit="return LoginForm();">
                                 <div class="mb-[20px]">
                                     <label class="form-label">{{ __('Email Address') }}</label>
-                                    <input type="email" class="form-control" id="email" placeholder="your@email.com"
+                                    <input type="email" class="form-control" id="email" placeholder="{{__('your@email.com')}}"
                                         value="{{ env('APP_STATUS') == 'Demo' ? 'admin@admin.com' : '' }}"
                                         autocomplete="off">
                                 </div>
@@ -127,7 +127,7 @@
                                     </label>
                                     <div class="input-group">
                                         <input type="password" class="form-control" id="password"
-                                            placeholder="Your password"
+                                            placeholder="{{__('Your password')}}"
                                             value="{{ env('APP_STATUS') == 'Demo' ? '12345678' : '' }}"
                                             autocomplete="off">
                                         <span class="bg-transparent border-0 input-group-text">

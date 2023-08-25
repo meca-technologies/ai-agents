@@ -348,7 +348,6 @@ class AIChatController extends Controller
         }
 
 
-
         $total_used_tokens = 0;
         $output = "";
         $responsedText = "";
@@ -374,6 +373,14 @@ class AIChatController extends Controller
           if (connection_aborted()) {
             break;
           }
+        $message = new UserOpenaiChatMessage();
+        $message->user_openai_chat_id = $chat->id;
+        $message->user_id = Auth::id();
+        $message->response = 'First Initiation';
+        if ($category->role == 'default') {
+            $output =  __('Hi! I am') . ' ' . $category->name . __(', and I\'m here to answer all your questions');
+        } else {
+            $output =  __('Hi! I am') . ' ' . $category->human_name . __(', and I\'m') . ' ' . $category->role . '. ' . $category->helps_with;
         }
         $message = UserOpenaiChatMessage::whereId($message_id)->first();
         $chat = UserOpenaiChat::whereId($chat_id)->first();

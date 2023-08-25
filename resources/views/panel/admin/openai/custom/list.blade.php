@@ -51,15 +51,35 @@
 								</td>
 								<td class="sort-name">{{$entry->title}}</td>
 								<td class="sort-description">{{$entry->description}}</td>
+								<style>
+									.select-wrapper {
+										position: relative;
+									}
+								
+									.arrow-down {
+										position: absolute;
+										right: 10px;
+										top: 50%;
+										transform: translateY(-50%);
+										width: 0;
+										height: 0;
+										border-left: 5px solid transparent;
+										border-right: 5px solid transparent;
+										border-top: 5px solid #ccc; /* Change the color as needed */
+									}
+								</style>
 								<td class="sort-package">
-									@if(env('APP_STATUS') == 'Demo')
-                                    <select class="form-control min-w-[90px]" onchange="return toastr.info('This feature is disabled in Demo version.');" name="premium" id="premium">
-                                    @else
-                                    <select class="form-control min-w-[90px]" onchange="return updatePackageStatus(this.value, {{$entry->id}});" name="premium" id="premium">
-                                    @endif
-                                        <option value="0" {{$entry->premium == 0 ? 'selected' : ''}}>{{__('Regular')}}</option>
-                                        <option value="1" {{$entry->premium == 1 ? 'selected' : ''}}>{{__('Premium')}}</option>
-                                    </select>
+									<div class="select-wrapper">
+										@if(env('APP_STATUS') == 'Demo')
+										<select class="form-control min-w-[90px]" onchange="return toastr.info('This feature is disabled in Demo version.');" name="premium" id="premium">
+										@else
+										<select class="form-control min-w-[90px]" onchange="return updatePackageStatus(this.value, {{$entry->id}});" name="premium" id="premium">
+										@endif
+											<option value="0" {{$entry->premium == 0 ? 'selected' : ''}}>{{__('Regular')}} </option>
+											<option value="1" {{$entry->premium == 1 ? 'selected' : ''}}>{{__('Premium')}}</option>
+										</select>
+										<div class="arrow-down"></div>
+									</div>
 								</td>
 
 								<td class="sort-date" data-date="{{strtotime($entry->updated_at)}}">
