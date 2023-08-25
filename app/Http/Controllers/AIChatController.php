@@ -56,21 +56,15 @@ class AIChatController extends Controller
 
   public function openAIChatUpdateSave(Request $request)
   {
-    $template = OpenaiGeneratorChatCategory::where('id', $request->template_id)->firstOrFail();
+    $template = OpenaiGeneratorChatCategory::findOrFail($request->template_id);
     $parentId = 0;
     if (optional($template)->id && empty($template->user_id)) {
       $parentId = $template->id;
-      $template = OpenaiGeneratorChatCategory::create($request->except(['_token', 'avatar', 'role']));
+      // $template = OpenaiGeneratorChatCategory::create($request->except(['_token', 'avatar', 'role', 'template_id']));
+      $template = new OpenaiGeneratorChatCategory();
       $template->parent_id = $parentId;
-      $template->prompt_prefix = "As a " . $request->role . ", ";
       $template->type = 'user';
       $template->user_id = auth()->id();
-
-      $template->update();
-    }
-
-    if (!optional($template)->id) {
-      $template = new OpenaiGeneratorChatCategory();
     }
 
     if ($request->hasFile('avatar')) {
@@ -102,8 +96,9 @@ class AIChatController extends Controller
     $template->color = $request->color;
     $template->chat_completions = $request->chat_completions;
     $template->prompt_prefix = "As a " . $request->role . ", ";
-    $template->type = 'user';
     $template->save();
+
+    return ['success' => true, 'message' => 'Template saved successfully.'];
   }
 
   public function openAIChatCreate(Request $request)
