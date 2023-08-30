@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class OpenaiGeneratorChatCategory extends Model
 {
   use HasFactory;
+
   protected $table = 'openai_chat_category';
 
 
