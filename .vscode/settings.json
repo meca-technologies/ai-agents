@@ -1,35 +1,33 @@
 {
-    "files.trimFinalNewlines": true,
-    "files.trimTrailingWhitespace": true,
-    "javascript.preferences.quoteStyle": "single",
-    "typescript.preferences.quoteStyle": "single",
-    "editor.formatOnSave": true,
-    "editor.tabSize": 2,
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 4,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.workingDirectories": ["./"],
+  "eslint.options": {
+    "configFile": "./.eslintrc.js"
+  },
+  "path-autocomplete.extensionOnImport": true,
+  "path-autocomplete.excludedItems": {
+    "**/*.js": {
+      "when": "**"
     },
-    "eslint.workingDirectories": [
-        "./"
-    ],
-    "eslint.options": {
-        "configFile": "./.eslintrc.js"
+    "**/*.jsx": {
+      "when": "**"
     },
-    "path-autocomplete.extensionOnImport": true,
-    "path-autocomplete.excludedItems": {
-        "**/*.js": {
-            "when": "**"
-        },
-        "**/*.jsx": {
-            "when": "**"
-        },
-        "**/*.ts": {
-            "when": "**"
-        },
-        "**/*.tsx": {
-            "when": "**"
-        }
+    "**/*.ts": {
+      "when": "**"
     },
-    "typescript.tsdk": "node_modules/typescript/lib",
-    "editor.detectIndentation": false,
-    "editor.insertSpaces": true
+    "**/*.tsx": {
+      "when": "**"
+    }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": true
 }

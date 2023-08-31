@@ -163,6 +163,7 @@ class AIChatController extends Controller
     $list = UserOpenaiChat::where('user_id', Auth::id())->where('openai_chat_category_id', $category->id)->orderBy('updated_at', 'desc');
     $list = $list->get();
     $chat = $list->first();
+
     $aiList = OpenaiGeneratorChatCategory::all();
 
 
